@@ -1,0 +1,41 @@
+{
+  "seed": 2362026,
+  "alpha": 0.05,
+  "calibration_reps": 600,
+  "evaluation_reps": 200,
+  "recovery_reps": 200,
+  "mode": "standard",
+  "matrix_sizes": [
+    6,
+    8,
+    12,
+    16,
+    24,
+    32,
+    64
+  ],
+  "gammas": [
+    0.25,
+    0.4,
+    0.55,
+    0.7,
+    0.85
+  ],
+  "signal_mode": "relative_scan",
+  "signal_parameters": [
+    0.0,
+    0.65,
+    1.0,
+    1.35,
+    1.8
+  ],
+  "exact_row_cap": 2500,
+  "distinct_configurations": 31,
+  "completed_configurations": 31,
+  "complete": true,
+  "trials": 93000,
+  "elapsed_seconds_current_session": 1.39,
+  "numpy": "2.3.5",
+  "python": "3.13.5",
+  "note": "Independent calibration/evaluation, paired methods within matrices; batch-wise restart safe."
+}
