@@ -62,3 +62,7 @@ At `(n,k)=(16,4)` the exact scan outperforms global aggregation for many moderat
 ## Source literature
 
 Butucea & Ingster (2013); Ma & Wu (2015); Butucea, Ingster & Suslina (2015); Cai, Liang & Rakhlin (2017). See the site's references and the project report for the detailed hypotheses and guarantees.
+
+## GitHub raw trial data
+
+GitHub stores the raw trial records in `results/trial_parts/trials_01.csv`, etc., each with the same header. These partitions concatenate row-for-row to the raw `results/trials.csv` in the downloadable archive. To reconstruct the single CSV from a GitHub checkout, run `python experiments/restore_trials.py`. The replayed results can then be regenerated with `experiments/run_experiments.py` and compared with `results/summary.csv`.
