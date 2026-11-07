@@ -1,0 +1,143 @@
+{
+  "seed": 2362026,
+  "alpha": 0.05,
+  "mode": "full",
+  "calibration_reps": 1500,
+  "null_validation_reps_per_signal": 600,
+  "alternative_reps_per_signal": 600,
+  "recovery_reps_per_signal": 600,
+  "time_seconds": 23.35137153800042,
+  "scenario_rng": "SeedSequence([master_seed, ord(task_letter), scenario_index])",
+  "numpy_version": "2.3.5",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "python": "3.13.5",
+  "detection_scenarios": [
+    {
+      "id": "D1",
+      "n": 16,
+      "k": 4,
+      "mus": [
+        0,
+        0.4,
+        0.8,
+        1.2,
+        1.6,
+        2.0,
+        2.4
+      ],
+      "scan": true
+    },
+    {
+      "id": "D2",
+      "n": 12,
+      "k": 5,
+      "mus": [
+        0,
+        0.2,
+        0.4,
+        0.6,
+        0.8,
+        1.0,
+        1.2
+      ],
+      "scan": true
+    },
+    {
+      "id": "D3",
+      "n": 64,
+      "k": 16,
+      "mus": [
+        0,
+        0.15,
+        0.3,
+        0.45,
+        0.6,
+        0.75,
+        0.9
+      ],
+      "scan": false
+    },
+    {
+      "id": "D4",
+      "n": 64,
+      "k": 4,
+      "mus": [
+        0,
+        0.5,
+        1.0,
+        1.5,
+        2.0,
+        2.5,
+        3.0
+      ],
+      "scan": false
+    }
+  ],
+  "recovery_scenarios": [
+    {
+      "id": "R1",
+      "n": 16,
+      "k": 4,
+      "mus": [
+        0,
+        0.75,
+        1.0,
+        1.25,
+        1.5,
+        1.75,
+        2.0,
+        2.5
+      ],
+      "exhaustive": true,
+      "thresholded": false
+    },
+    {
+      "id": "R2",
+      "n": 12,
+      "k": 5,
+      "mus": [
+        0,
+        0.35,
+        0.5,
+        0.65,
+        0.8,
+        1.0,
+        1.2
+      ],
+      "exhaustive": true,
+      "thresholded": false
+    },
+    {
+      "id": "R3",
+      "n": 64,
+      "k": 16,
+      "mus": [
+        0,
+        0.4,
+        0.6,
+        0.8,
+        1.0,
+        1.2,
+        1.5
+      ],
+      "exhaustive": false,
+      "thresholded": false
+    },
+    {
+      "id": "R4",
+      "n": 64,
+      "k": 4,
+      "mus": [
+        0,
+        1.0,
+        2.0,
+        3.0,
+        4.0,
+        5.0
+      ],
+      "exhaustive": false,
+      "thresholded": true
+    }
+  ],
+  "note": "The same held-out null matrices are redrawn independently for every mu; the same planted alternative is shared across procedures within a replicate. The exhaustive scan is exact, with arbitrary nonconsecutive supports."
+}
