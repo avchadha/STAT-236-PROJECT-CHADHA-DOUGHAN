@@ -69,17 +69,48 @@ class NotebookStudies(unittest.TestCase):
         self.assertEqual(data.condition.tolist(),['null','signal'])
         self.assertTrue(pd.isna(data.value.iloc[1]))
 
-    def test_notebook_embeds_identical_algorithms(self):
+    def test_short_notebook_algorithms(self):
+        from functools import cache
+        from itertools import combinations
+        from run_experiments import recovery_spectral
+
         notebook = nbformat.read(ROOT/'notebooks/STAT236_Sparse_Submatrix_Experiments.ipynb',as_version=4)
-        functions = {}
+        namespace = dict(np=np, cache=cache, combinations=combinations,
+                         comb=math.comb, ceil=math.ceil)
         for cell in notebook.cells:
             if cell.cell_type == 'code':
-                functions.update({n.name:ast.dump(n, include_attributes=False)
-                                  for n in ast.parse(cell.source).body if isinstance(n,ast.FunctionDef)})
-        source = ast.parse((ROOT/'experiments/run_experiments.py').read_text())
-        for node in source.body:
-            if isinstance(node,ast.FunctionDef) and node.name not in {'main','export_csv'}:
-                self.assertEqual(functions[node.name],ast.dump(node,include_attributes=False),node.name)
+                definitions = [n for n in ast.parse(cell.source).body
+                               if isinstance(n, ast.FunctionDef)]
+                exec(compile(ast.Module(body=definitions, type_ignores=[]),
+                             '<notebook>', 'exec'), namespace)
+        rng = np.random.default_rng(236)
+        for n, k in [(5, 2), (6, 3)]:
+            for _ in range(5):
+                X = rng.normal(size=(n, n))
+                value, rows, cols = namespace['scan'](X, k)
+                brute = max(X[np.ix_(a, b)].sum() / k
+                            for a in combinations(range(n), k)
+                            for b in combinations(range(n), k))
+                self.assertAlmostEqual(value, brute)
+                self.assertAlmostEqual(X[np.ix_(rows, cols)].sum() / k, brute)
+        for n, k, threshold in [(12, 2, 1.2), (16, 8, 0.0)]:
+            X, rows, cols = namespace['make_matrix'](n, k, 3, 1, rng)
+            for soft in [False, True]:
+                expected = recovery_spectral(X, k, threshold=threshold if soft else None)
+                actual = namespace['spectral'](X, k, threshold if soft else 0)
+                for a, b in zip(actual, expected):
+                    np.testing.assert_array_equal(a, b)
+        # The generator changes exactly the planted entries, and nothing else.
+        X, rows, cols = namespace['make_matrix'](12, 2, 3, 1, np.random.default_rng(236))
+        Z = np.random.default_rng(236).standard_normal((12, 12))
+        Z[np.ix_(rows, cols)] += 3
+        np.testing.assert_array_equal(X, Z)
+        X, rows, cols = namespace['make_matrix'](12, 2, 0, 0, np.random.default_rng(236))
+        self.assertEqual(len(rows) + len(cols), 0)
+        np.testing.assert_array_equal(X, np.random.default_rng(236).standard_normal((12,12)))
+        self.assertEqual(namespace['scan_cutoff'](list(range(99)), .05), 94)
+        self.assertEqual(namespace['recovery_error'](([1], [2]), [1], [2]), 0)
+        self.assertEqual(namespace['recovery_error'](([1], [3]), [1], [2]), 1)
 
     def test_checkpoint_and_missing_result_detection(self):
         plan, _ = broad_plan()
