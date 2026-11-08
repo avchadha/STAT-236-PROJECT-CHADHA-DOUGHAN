@@ -1,0 +1,1024 @@
+{
+  "version": 2,
+  "name": "power_laws",
+  "seed": 2362026,
+  "alpha": 0.05,
+  "cal_reps": 1500,
+  "eval_reps": 600,
+  "recovery": false,
+  "stream_keys": [
+    401,
+    402
+  ],
+  "exact_cap": 2500,
+  "plan": [
+    {
+      "n": 12,
+      "k": 2,
+      "gamma_effective": 0.2789429456511298,
+      "requested_gammas": [
+        0.4
+      ],
+      "signals": [
+        {
+          "reference": "null",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.0,
+          "mu": 1.0
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.04,
+          "mu": 0.905383864095
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.099471472826,
+          "mu": 0.781002190593
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.1,
+          "mu": 0.779977141904
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.139471472826,
+          "mu": 0.707106781186
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.179471472826,
+          "mu": 0.640203069878
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.2,
+          "mu": 0.608364341893
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.3,
+          "mu": 0.474510280626
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.4,
+          "mu": 0.370107172487
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.6,
+          "mu": 0.22516000642
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.8,
+          "mu": 0.136979319126
+        }
+      ],
+      "mus": [
+        0.0,
+        1.0,
+        0.905383864095,
+        0.781002190593,
+        0.779977141904,
+        0.707106781186,
+        0.640203069878,
+        0.608364341893,
+        0.474510280626,
+        0.370107172487,
+        0.22516000642,
+        0.136979319126
+      ]
+    },
+    {
+      "n": 12,
+      "k": 3,
+      "gamma_effective": 0.4421141086977403,
+      "requested_gammas": [
+        0.5
+      ],
+      "signals": [
+        {
+          "reference": "null",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.0,
+          "mu": 1.0
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.04,
+          "mu": 0.905383864095
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.1,
+          "mu": 0.779977141904
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.181057054349,
+          "mu": 0.637685618317
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.2,
+          "mu": 0.608364341893
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.221057054349,
+          "mu": 0.577350269189
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.261057054349,
+          "mu": 0.522723617655
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.3,
+          "mu": 0.474510280626
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.4,
+          "mu": 0.370107172487
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.6,
+          "mu": 0.22516000642
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.8,
+          "mu": 0.136979319126
+        }
+      ],
+      "mus": [
+        0.0,
+        1.0,
+        0.905383864095,
+        0.779977141904,
+        0.637685618317,
+        0.608364341893,
+        0.577350269189,
+        0.522723617655,
+        0.474510280626,
+        0.370107172487,
+        0.22516000642,
+        0.136979319126
+      ]
+    },
+    {
+      "n": 12,
+      "k": 5,
+      "gamma_effective": 0.647685462377997,
+      "requested_gammas": [
+        0.6666666666666666
+      ],
+      "signals": [
+        {
+          "reference": "null",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.0,
+          "mu": 1.0
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.1,
+          "mu": 0.779977141904
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.2,
+          "mu": 0.608364341893
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.255370924756,
+          "mu": 0.530161867287
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.283842731189,
+          "mu": 0.493949155972
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.295370924756,
+          "mu": 0.48
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.3,
+          "mu": 0.474510280626
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.323842731189,
+          "mu": 0.4472135955
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.335370924756,
+          "mu": 0.434584254766
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.363842731189,
+          "mu": 0.404899973169
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.4,
+          "mu": 0.370107172487
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.6,
+          "mu": 0.22516000642
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.8,
+          "mu": 0.136979319126
+        }
+      ],
+      "mus": [
+        0.0,
+        1.0,
+        0.779977141904,
+        0.608364341893,
+        0.530161867287,
+        0.493949155972,
+        0.48,
+        0.474510280626,
+        0.4472135955,
+        0.434584254766,
+        0.404899973169,
+        0.370107172487,
+        0.22516000642,
+        0.136979319126
+      ]
+    },
+    {
+      "n": 12,
+      "k": 7,
+      "gamma_effective": 0.783091851446946,
+      "requested_gammas": [
+        0.8
+      ],
+      "signals": [
+        {
+          "reference": "null",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.0,
+          "mu": 1.0
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.1,
+          "mu": 0.779977141904
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.2,
+          "mu": 0.608364341893
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.3,
+          "mu": 0.474510280626
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.4,
+          "mu": 0.370107172487
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.526183702894,
+          "mu": 0.270490748616
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.566183702894,
+          "mu": 0.244897959184
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.6,
+          "mu": 0.22516000642
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.606183702894,
+          "mu": 0.221726660595
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.8,
+          "mu": 0.136979319126
+        }
+      ],
+      "mus": [
+        0.0,
+        1.0,
+        0.779977141904,
+        0.608364341893,
+        0.474510280626,
+        0.370107172487,
+        0.270490748616,
+        0.244897959184,
+        0.22516000642,
+        0.221726660595,
+        0.136979319126
+      ]
+    },
+    {
+      "n": 24,
+      "k": 3,
+      "gamma_effective": 0.34568712404340535,
+      "requested_gammas": [
+        0.4
+      ],
+      "signals": [
+        {
+          "reference": "null",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.0,
+          "mu": 1.0
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.04,
+          "mu": 0.880626094719
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.1,
+          "mu": 0.727744406041
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.132843562022,
+          "mu": 0.655613401251
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.172843562022,
+          "mu": 0.577350269189
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.2,
+          "mu": 0.529611920524
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.212843562022,
+          "mu": 0.508429712841
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.3,
+          "mu": 0.385422112534
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.4,
+          "mu": 0.280488786362
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.6,
+          "mu": 0.148550204831
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.8,
+          "mu": 0.078673959275
+        }
+      ],
+      "mus": [
+        0.0,
+        1.0,
+        0.880626094719,
+        0.727744406041,
+        0.655613401251,
+        0.577350269189,
+        0.529611920524,
+        0.508429712841,
+        0.385422112534,
+        0.280488786362,
+        0.148550204831,
+        0.078673959275
+      ]
+    },
+    {
+      "n": 24,
+      "k": 4,
+      "gamma_effective": 0.4362085839710631,
+      "requested_gammas": [
+        0.5
+      ],
+      "signals": [
+        {
+          "reference": "null",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.0,
+          "mu": 1.0
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.04,
+          "mu": 0.880626094719
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.1,
+          "mu": 0.727744406041
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.178104291986,
+          "mu": 0.567777860545
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.2,
+          "mu": 0.529611920524
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.218104291986,
+          "mu": 0.499999999999
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.258104291986,
+          "mu": 0.440313047359
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.3,
+          "mu": 0.385422112534
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.4,
+          "mu": 0.280488786362
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.6,
+          "mu": 0.148550204831
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.8,
+          "mu": 0.078673959275
+        }
+      ],
+      "mus": [
+        0.0,
+        1.0,
+        0.880626094719,
+        0.727744406041,
+        0.567777860545,
+        0.529611920524,
+        0.499999999999,
+        0.440313047359,
+        0.385422112534,
+        0.280488786362,
+        0.148550204831,
+        0.078673959275
+      ]
+    },
+    {
+      "n": 24,
+      "k": 8,
+      "gamma_effective": 0.6543128759565946,
+      "requested_gammas": [
+        0.6666666666666666
+      ],
+      "signals": [
+        {
+          "reference": "null",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.0,
+          "mu": 1.0
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.1,
+          "mu": 0.727744406041
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.2,
+          "mu": 0.529611920524
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.268625751913,
+          "mu": 0.425833395409
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.287156437978,
+          "mu": 0.4014795754
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.3,
+          "mu": 0.385422112534
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.308625751913,
+          "mu": 0.375
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.327156437978,
+          "mu": 0.353553390594
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.348625751913,
+          "mu": 0.33023478552
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.367156437978,
+          "mu": 0.311348341633
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.4,
+          "mu": 0.280488786362
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.6,
+          "mu": 0.148550204831
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.8,
+          "mu": 0.078673959275
+        }
+      ],
+      "mus": [
+        0.0,
+        1.0,
+        0.727744406041,
+        0.529611920524,
+        0.425833395409,
+        0.4014795754,
+        0.385422112534,
+        0.375,
+        0.353553390594,
+        0.33023478552,
+        0.311348341633,
+        0.280488786362,
+        0.148550204831,
+        0.078673959275
+      ]
+    },
+    {
+      "n": 24,
+      "k": 12,
+      "gamma_effective": 0.7818957080144684,
+      "requested_gammas": [
+        0.8
+      ],
+      "signals": [
+        {
+          "reference": "null",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.0,
+          "mu": 1.0
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.1,
+          "mu": 0.727744406041
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.2,
+          "mu": 0.529611920524
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.3,
+          "mu": 0.385422112534
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.4,
+          "mu": 0.280488786362
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.523791416029,
+          "mu": 0.189259286848
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.563791416029,
+          "mu": 0.166666666667
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.6,
+          "mu": 0.148550204831
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.603791416029,
+          "mu": 0.146771015786
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.8,
+          "mu": 0.078673959275
+        }
+      ],
+      "mus": [
+        0.0,
+        1.0,
+        0.727744406041,
+        0.529611920524,
+        0.385422112534,
+        0.280488786362,
+        0.189259286848,
+        0.166666666667,
+        0.148550204831,
+        0.146771015786,
+        0.078673959275
+      ]
+    },
+    {
+      "n": 64,
+      "k": 5,
+      "gamma_effective": 0.3869880158145604,
+      "requested_gammas": [
+        0.4
+      ],
+      "signals": [
+        {
+          "reference": "null",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.0,
+          "mu": 1.0
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.04,
+          "mu": 0.846745312363
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.1,
+          "mu": 0.659753955386
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.153494007907,
+          "mu": 0.528155974378
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.193494007907,
+          "mu": 0.4472135955
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.2,
+          "mu": 0.435275281648
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.233494007907,
+          "mu": 0.378676015615
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.3,
+          "mu": 0.287174588749
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.4,
+          "mu": 0.189464570814
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.6,
+          "mu": 0.082469244423
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.8,
+          "mu": 0.035896823594
+        }
+      ],
+      "mus": [
+        0.0,
+        1.0,
+        0.846745312363,
+        0.659753955386,
+        0.528155974378,
+        0.4472135955,
+        0.435275281648,
+        0.378676015615,
+        0.287174588749,
+        0.189464570814,
+        0.082469244423,
+        0.035896823594
+      ]
+    },
+    {
+      "n": 64,
+      "k": 8,
+      "gamma_effective": 0.5,
+      "requested_gammas": [
+        0.5
+      ],
+      "signals": [
+        {
+          "reference": "null",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.0,
+          "mu": 1.0
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.04,
+          "mu": 0.846745312363
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.1,
+          "mu": 0.659753955386
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.2,
+          "mu": 0.435275281648
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.21,
+          "mu": 0.417543959714
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.25,
+          "mu": 0.353553390593
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.29,
+          "mu": 0.299369676155
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.3,
+          "mu": 0.287174588749
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.4,
+          "mu": 0.189464570814
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.6,
+          "mu": 0.082469244423
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.8,
+          "mu": 0.035896823594
+        }
+      ],
+      "mus": [
+        0.0,
+        1.0,
+        0.846745312363,
+        0.659753955386,
+        0.435275281648,
+        0.417543959714,
+        0.353553390593,
+        0.299369676155,
+        0.287174588749,
+        0.189464570814,
+        0.082469244423,
+        0.035896823594
+      ]
+    },
+    {
+      "n": 64,
+      "k": 16,
+      "gamma_effective": 0.6666666666666667,
+      "requested_gammas": [
+        0.6666666666666666
+      ],
+      "signals": [
+        {
+          "reference": "null",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.0,
+          "mu": 1.0
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.1,
+          "mu": 0.659753955386
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.2,
+          "mu": 0.435275281648
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.293333333333,
+          "mu": 0.295248165358
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.3,
+          "mu": 0.287174588749
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.333333333333,
+          "mu": 0.25
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.373333333333,
+          "mu": 0.211686328091
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.4,
+          "mu": 0.189464570814
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.6,
+          "mu": 0.082469244423
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.8,
+          "mu": 0.035896823594
+        }
+      ],
+      "mus": [
+        0.0,
+        1.0,
+        0.659753955386,
+        0.435275281648,
+        0.295248165358,
+        0.287174588749,
+        0.25,
+        0.211686328091,
+        0.189464570814,
+        0.082469244423,
+        0.035896823594
+      ]
+    },
+    {
+      "n": 64,
+      "k": 27,
+      "gamma_effective": 0.7924812503605781,
+      "requested_gammas": [
+        0.8
+      ],
+      "signals": [
+        {
+          "reference": "null",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.0,
+          "mu": 1.0
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.1,
+          "mu": 0.659753955386
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.2,
+          "mu": 0.435275281648
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.3,
+          "mu": 0.287174588749
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.4,
+          "mu": 0.189464570814
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.544962500721,
+          "mu": 0.103681111566
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.584962500721,
+          "mu": 0.087791495199
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.6,
+          "mu": 0.082469244423
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.624962500721,
+          "mu": 0.074337037025
+        },
+        {
+          "reference": "beta",
+          "parameter": 0.8,
+          "mu": 0.035896823594
+        }
+      ],
+      "mus": [
+        0.0,
+        1.0,
+        0.659753955386,
+        0.435275281648,
+        0.287174588749,
+        0.189464570814,
+        0.103681111566,
+        0.087791495199,
+        0.082469244423,
+        0.074337037025,
+        0.035896823594
+      ]
+    }
+  ]
+}

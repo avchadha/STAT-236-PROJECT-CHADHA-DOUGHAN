@@ -1,88 +1,38 @@
-# STAT 236 — Sparse Submatrix Detection and Recovery
+# STAT 236 - Sparse Submatrix Detection and Recovery
 
-Research project by Amrit Chadha and Faris Doughan. The source of truth for reported empirical results is the offline simulation code and the files in `results/`. The website's separate live simulator is a demonstration and **does not replace** these archived runs.
+Amrit Chadha and Faris Doughan. The notebook, paper, and website now use one active dataset: [`results/final/`](results/final/). Every final detection configuration uses **1,500 independent null calibration matrices** and **600 fresh null plus 600 planted matrices per signal**. Recovery uses **600 additional planted matrices per signal**.
 
-## What was simulated
+## Final studies
 
-An `n × n` observed matrix has independent standard Gaussian entries under the null. Under the alternative, `k` rows and `k` columns are selected uniformly without replacement (the sets need not be consecutive), and the entries of their Cartesian product receive a positive mean shift `mu`. A single planted matrix is reused across the competing procedures for paired evaluation.
-
-### Detection: false-positive rate and power
-
-- Global sum, normalized as `X.sum() / n`.
-- Maximum entry (`X.max()`).
-- Column pooling, the maximum column sum divided by `sqrt(n)`; included as a secondary comparator rather than a central square-block procedure.
-- Exact exhaustive scan for small matrices: largest normalized `k × k` block sum over **every** candidate row and column set. Enumeration of all row sets with top-`k` column selection is mathematically identical to full row-and-column enumeration, and is verified against brute force.
-- Sum-or-scan combined test, calibrated by Bonferroni splitting `alpha=0.05` into two level-0.025 component tests. The combined test is only computed in scenarios for which the exact scan is feasible.
-
-All rejection thresholds are calibrated on **1,500 independent null matrices** per configuration and are fixed before evaluating alternatives. We use the conformal-style empirical upper order statistic `ceil((m+1)(1-alpha))` (one-indexed) for each component; this controls the expected marginal null error under independent, exchangeable samples. For each `mu`, **600 new null samples** and **600 independently planted alternatives** are tested. The Wilson score 95% confidence intervals describe the conditional binomial evaluation uncertainty and **do not include variability in the calibration cutoff**. Small fluctuations around 5% false positives are expected. Combined-test calibration uses the 2.5% component quantiles.
-
-Detection cases: `D1 (n=16,k=4)`, `D2 (n=12,k=5)`, `D3 (n=64,k=16)`, and `D4 (n=64,k=4)`. The expensive exact scan appears only in D1 and D2. **No simulated large-matrix scan is approximated and mislabeled “exact.”**
-
-### Recovery: exact index-set identification
-
-We record a correct recovery only if the estimated set of `k` affected rows *and* the estimated set of `k` affected columns both match the planted sets. Reported 95% Wilson intervals come from **600 independent planted matrices** per `mu`. We also record the average of row and column Jaccard overlap. The recovery procedures are:
-
-- Exhaustive block maximization, retaining the maximizing row and column sets. Evaluated only in `R1 (16,4)` and `R2 (12,5)`.
-- Spectral projection. The leading singular vectors are jointly sign-oriented using the positive-mean model, and the top-`k` projected row and column scores are retained. Evaluated in all four recovery configurations.
-- Fixed soft-thresholded spectral projection for the small-block case `R4 (64,4)`. Entries are transformed by `sign(x) max(abs(x)-t,0)` using the prespecified `t = sqrt(2 log(n/k²))`, then spectral projection is applied. The threshold is not fit on the outcomes or tuned on the alternative data.
-
-`R3` is `(64,16)`. Our finite-sample implementation of the spectral method uses the known `k` to select the top-`k` scores. These experiments are finite-sample illustrations, not a proof of an asymptotic regime or a computational lower bound. The theoretical papers treat broader conditions that should not be claimed to hold unconditionally for this exact simulation.
-
-## Reproduce from code
-
-Requires Python 3.10 or newer, NumPy, and Matplotlib. Use a single BLAS thread for more stable wall-time comparisons. All sampling uses deterministic NumPy `SeedSequence` streams keyed by scenario, so `--only D2` matches D2 in a full run (except for measured runtimes).
-
-```bash
-python -m pip install -r requirements.txt
-OPENBLAS_NUM_THREADS=1 python tests/test_statistics.py
-OPENBLAS_NUM_THREADS=1 python experiments/run_experiments.py --mode full --seed 2362026
-OPENBLAS_NUM_THREADS=1 python experiments/build_figures.py
-OPENBLAS_NUM_THREADS=1 python experiments/build_site.py
-python tests/test_site.py  # Optional: requires Playwright and a local Chromium binary
-```
-
-`--mode quick` uses fewer replications for development only; quick outputs should not be substituted for the paper results. `--only D1` (etc.) limits a run to one scenario, with matching seeded statistical outcomes.
-
-## What the files mean
-
-- `results/trials.csv`: 50,400 raw evaluation trials, with test statistics/decisions or recovery success/partial overlap.
-- `results/calibration.csv`: thresholds from independent null calibration (only thresholds, not all 1,500 raw null statistics; the generator reruns those exactly).
-- `results/summary.csv`: per-method estimated power, held-out false-positive rate, recovery success, partial overlap, 95% Wilson intervals, and recorded per-evaluation runtime (machine dependent).
-- `results/metadata.json`: experimental configurations, random seed scheme, number of trials, and environment versions.
-- `figures/detection_power.{pdf,png,svg}` and `figures/exact_recovery.{pdf,png,svg}`: publication-ready figures generated from the summary CSV, not hand drawn.
-- `paper_simulation_section.tex`: ready-to-include LaTeX text, a results table and figure references generated from `summary.csv`.
-- `STAT236_Project_With_Simulations.tex` and `.pdf`: a full report draft with that section inserted.
-- `site/index.html`: complete standalone interactive website with **embedded fixed results** and a separate visitor-run Monte Carlo module.
-- `tests/test_statistics.py`: brute-force verification of the optimized exact scan, spectral easy-case verification, and calibration checks.
-
-## Interpretation and limits
-
-At `(n,k)=(16,4)` the exact scan outperforms global aggregation for many moderate shifts. For `(64,16)` global aggregation can be effective on weak signals, whereas in the smaller planted-block `(64,4)` case an extreme-value test may have better power than the global sum for large entrywise mean shifts. At `(64,4)`, a thresholded spectral procedure improves exact recovery over the unthresholded baseline at intermediate shifts. These are **finite-sample observations** subject to Monte Carlo and calibration uncertainty; they do not establish statistical optimality or computational hardness for the tested dimensions.
-
-## Source literature
-
-Butucea & Ingster (2013); Ma & Wu (2015); Butucea, Ingster & Suslina (2015); Cai, Liang & Rakhlin (2017). See the site's references and the project report for the detailed hypotheses and guarantees.
-
-## GitHub raw trial data
-
-GitHub stores the raw trial records in `results/trial_parts/trials_01.csv`, etc., each with the same header. These partitions concatenate row-for-row to the raw `results/trials.csv` in the downloadable archive. To reconstruct the single CSV from a GitHub checkout, run `python experiments/restore_trials.py`. The replayed results can then be regenerated with `experiments/run_experiments.py` and compared with `results/summary.csv`.
-## Standalone experiment notebook
-
-[Open in Colab](https://colab.research.google.com/github/avchadha/STAT-236-PROJECT-CHADHA-DOUGHAN/blob/main/notebooks/STAT236_Sparse_Submatrix_Experiments.ipynb) or open the [executed notebook](notebooks/STAT236_Sparse_Submatrix_Experiments.ipynb). The [HTML reading copy](notebooks/STAT236_Sparse_Submatrix_Experiments.html) keeps all results visible and hides setup and plotting code. No experiment modes need selecting.
-
-The notebook embeds the statistical implementation and runs three fixed studies from top to bottom:
-
-| Study | Design | Recorded evaluation trials |
+| Study | Grid | Evaluation trials |
 |---|---|---:|
-| Broad sweep | Original seven matrix sizes, five requested sparsity exponents, five scan-scaled signals; 31 distinct `(n,k)` pairs | 93,000 |
-| Signal thresholds | `(12,2)`, `(12,5)`, `(64,4)`, `(64,16)`; half, once, and twice every applicable sum, scan, max, exact-recovery, spectral, and thresholded-spectral reference scale, plus zero signal | 42,000 |
-| Power laws | `n = 12,24,64`; requested `gamma = .4,.5,2/3,.8`; a beta grid including both exponent boundaries and nearby values; detection only | 57,600 |
+| Matrix size and sparsity | `n = 6,8,12,16,24,32,64`; requested `gamma = .25,.40,.55,.70,.85`; five scan-scaled signals; 31 distinct `(n,k)` pairs | 279,000 |
+| Signal reference levels | `(12,2)`, `(12,5)`, `(64,4)`, `(64,16)`; half, once, and twice every applicable signal reference, plus zero | 126,000 |
+| Power laws | `n = 12,24,64`; requested `gamma = .4,.5,2/3,.8`; beta values at and around the exponent boundaries, plus a zero-signal check; detection only | 172,800 |
+| Total | 47 study/configuration combinations; 70,500 calibration matrices counted separately | **577,800** |
 
-Each pair uses 600 independent calibration matrices and 200 evaluations per signal and condition. Studies 1–2 also run 200 recovery trials per signal. All signals run automatically. The 50,400 original paper trials are loaded and checked separately. These new studies do not replace the paper's 1,500/600 calibration/evaluation design.
+The block size is `floor(n**gamma)`, clipped to `[2,n-1]`. Near-integer floating-point values are handled explicitly, so `64**(2/3)` gives 16. Actual block sizes and effective exponents are recorded. All chosen signal values run automatically. Exact scanning and block maximization run only when `comb(n,k) <= 2500`; omitted methods are uncomputed, and no heuristic is labeled exact.
 
-The notebook reports actual block sizes and effective exponents after rounding, both detection and recovery regimes, and exact-scan eligibility. Every expected method/signal combination and reported success count is checked against raw trials. Missing exact scans are marked as uncomputed. Theoretical rejection thresholds are evaluated separately from the calibrated 5% tests. Finite simulations cannot verify the writeup's asymptotic impossibility results or computational hardness hypotheses; the notebook's coverage table identifies these limits.
+The detectors are global sum, maximum entry, column pooling, exact scan, and Bonferroni-calibrated sum-or-scan. Recovery uses exact block maximization, spectral projection, and fixed soft-thresholded spectral projection where `k*k < n`. The implementation uses full SVD and known `k`; the faster power-iteration cost discussed in the theory is not its measured runtime. Exact success requires both planted index sets to match. Wilson 95% intervals describe evaluation uncertainty conditional on the calibrated cutoff.
 
-To rebuild and execute locally:
+## Read the results
+
+- [Website](https://avchadha.github.io/STAT-236-PROJECT-CHADHA-DOUGHAN/) and [website source](index.html).
+- [Executed notebook](notebooks/STAT236_Sparse_Submatrix_Experiments.ipynb), [reading copy](notebooks/STAT236_Sparse_Submatrix_Experiments.html), or [open in Colab](https://colab.research.google.com/github/avchadha/STAT-236-PROJECT-CHADHA-DOUGHAN/blob/main/notebooks/STAT236_Sparse_Submatrix_Experiments.ipynb).
+- [Current report](STAT236_Project_With_Simulations.pdf) and [report source](STAT236_Project_With_Simulations.tex).
+- [Final dataset manifest](results/final/manifest.json), including the complete design and verification counts.
+
+Each study folder contains `summary.csv`, `calibration.csv`, `configurations.csv`, `design.json`, numerical environment details, and compressed raw trials in `trials.csv.gz`. The threshold study also includes theoretical-threshold errors, bound checks, and recovery reference comparisons. `paper_selected_results.csv` records every number selected for the paper's results table. Read compressed trials with `pandas.read_csv(path, keep_default_na=False, na_values=[''])` to preserve the condition label `null`.
+
+## What was verified
+
+All 577,800 raw evaluation records are checked against every expected configuration, signal, procedure, replication count, and reported success count. Statistical function definitions embedded in the notebook are checked against the source implementation. Exact scan and maximizing indices are checked against independent brute-force enumeration; both spectral variants are checked on strong planted signals.
+
+The experiment's reference scales are checked against the paper and website. The 1,476 sum and maximum-entry rejection rates are compared with exact Gaussian probabilities using exact binomial diagnostics and a 1% familywise threshold across that family. The threshold study passes 350 one-sided checks against the sum, scan, and maximum-entry error calculations at a separate 1% familywise level. Recovery curves report finite-sample success below, at, and above reference scales. Unknown constants, logarithmic factors, asymptotic impossibility, and clique-based computational lower bounds are not established by these simulations.
+
+## Reproduce
+
+Requires Python 3.10+; compiling the report also requires LaTeX. Colab already supplies the notebook's main scientific libraries.
 
 ```bash
 python -m pip install -r requirements-notebook.txt
@@ -90,9 +40,23 @@ python tests/test_statistics.py
 python experiments/build_notebook.py
 python tests/test_notebook_studies.py
 python experiments/execute_notebook.py
+python experiments/run_final_study.py
+python experiments/build_final_report.py
+pdflatex -interaction=nonstopmode -halt-on-error STAT236_Project_With_Simulations.tex
+pdflatex -interaction=nonstopmode -halt-on-error STAT236_Project_With_Simulations.tex
+python experiments/build_site.py
 python experiments/export_notebook.py
+python tests/test_final_study.py
 ```
 
-`build_notebook.py` copies the reviewed statistical function definitions directly from `run_experiments.py`; tests check their syntax trees for equality. The notebook itself needs no custom project imports. Its archived paper downloads are pinned to commit `f87e43d` and use local CSVs when available.
+`build_notebook.py` embeds the statistical functions directly from `run_experiments.py`; running the notebook needs no custom project imports or archived downloads. The three designs use independent deterministic `SeedSequence([seed, task_stream_key, n, k])` streams with master seed 2362026. Completed configurations are verified and resumed only for matching settings. `run_final_study.py` reuses those verified checkpoints and exports the active dataset. `build_site.py` writes identical generated pages at the root and `site/index.html`, embedding the same verified summaries and current report. The website's visitor-run simulator is a separate demonstration.
 
-Each study saves its complete design, calibration, summaries, configuration table, and raw trials in `outputs_notebook/`. Matching completed configurations are verified and reused on rerun. The final cell produces `STAT236_notebook_results.zip`. Colab storage is temporary: download the ZIP to retain the run. Compact results for the added studies are saved in `results/notebook_studies/`; the original `results/gamma_sweep/` remains the archived broad study.
+The notebook saves checkpoints in `outputs_notebook/` and writes `STAT236_notebook_results.zip`. Colab storage is temporary: download the ZIP to keep a run. Numerical-library tie handling and measured times can vary across machines; recorded environment details accompany the results.
+
+## Earlier results
+
+The original D1-D4/R1-R4 studies and the earlier 200-replication exploratory sweeps are superseded in the current notebook, paper, and website. Their complete files remain available at [the previous repository version](https://github.com/avchadha/STAT-236-PROJECT-CHADHA-DOUGHAN/tree/295c1702a6f52350dc3a43dafd8fa97b7023f95e). They are historical results, not evidence of contaminated data. `run_experiments.py` retains the original scenario runner for historical reproduction; use `run_final_study.py` for the active study.
+
+## Source literature
+
+Butucea and Ingster (2013); Ma and Wu (2015); Butucea, Ingster and Suslina (2015); Cai, Liang and Rakhlin (2017). See the report for the hypotheses, constants, and scope of each guarantee.

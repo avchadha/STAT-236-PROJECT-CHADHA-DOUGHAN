@@ -3,7 +3,9 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{graphicx}
 \usepackage{float}
-\usepackage{amsmath, amssymb, amsthm, dsfont}
+\usepackage{amsmath, amssymb, amsthm}
+\IfFileExists{dsfont.sty}{\usepackage{dsfont}}{}
+\providecommand{\mathds}[1]{\mathbb{#1}}
 \usepackage{setspace}
 \usepackage{parskip}
 \usepackage{hyperref}

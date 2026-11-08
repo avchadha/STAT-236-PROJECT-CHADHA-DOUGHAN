@@ -50,9 +50,9 @@ Setup, file handling, and plotting definitions are collapsed; their outputs rema
 | 2. Signal thresholds | Four $(n,k)$ pairs; signals below, at, and above each reference scale | Cover every detection and recovery procedure in the writeup |
 | 3. Power laws | Three $n$ values, four $\gamma$ values, a $\beta$ grid | Sample both sides of the detection exponent boundaries |
 
-Each detector uses 600 independent calibration matrices at level $\alpha=.05$.
-Each signal has 200 fresh null and 200 fresh planted detection matrices;
-Studies 1–2 add 200 recovery matrices. Methods share the same matrix within a trial.
+Each detector uses 1,500 independent calibration matrices at level $\alpha=.05$.
+Each signal has 600 fresh null and 600 fresh planted detection matrices;
+Studies 1–2 add 600 recovery matrices. Methods share the same matrix within a trial.
 Wilson 95% intervals describe evaluation uncertainty, conditional on the calibration cutoff.
 ''')
 code('''
@@ -74,8 +74,8 @@ except ImportError:
 
 SEED = 2362026
 ALPHA = .05
-CALIBRATION_REPS = 600
-EVALUATION_REPS = 200
+CALIBRATION_REPS = 1500
+EVALUATION_REPS = 600
 EXACT_ROW_CAP = 2500
 OUTPUT = Path('outputs_notebook')
 OUTPUT.mkdir(exist_ok=True)
@@ -210,7 +210,8 @@ def threshold_curves(table, plan):
         for (n,k), group in ss.groupby(['n','k']):
             group = group.sort_values('parameter')
             ax.errorbar(group.parameter, group.estimate,
-                        yerr=[group.estimate-group.ci_low, group.ci_high-group.estimate],
+                        yerr=[np.maximum(0., group.estimate-group.ci_low),
+                              np.maximum(0., group.ci_high-group.estimate)],
                         marker='o', capsize=2, label=f'n={n}, k={k}')
         ax.axvline(1, color='#777', ls=':', lw=1)
         ax.set(title=reference.replace('_',' '), xlabel='mu / reference scale',
@@ -239,38 +240,6 @@ def beta_curves(table, plan):
     finish(fig, 'power_law_regimes')
 ''', hidden=True, title='Plotting functions')
 
-md(r'''
-## Original paper results
-These are the archived D1–D4 and R1–R4 experiments: 1,500 calibration matrices and
-600 evaluations per signal. All four configurations are shown below. They are kept
-separate from the new studies, which use fewer replications.
-''')
-code('''
-def archived_csv(path):
-    local = Path(path)
-    return read_results(local if local.is_file() else BASE_RAW + path)
-
-paper_summary = archived_csv('results/summary.csv')
-paper_calibration = archived_csv('results/calibration.csv')
-paper_trials = pd.concat([archived_csv(f'results/trial_parts/trials_{i:02d}.csv')
-                          for i in range(1,11)], ignore_index=True)
-assert len(paper_trials) == 50400 and len(paper_summary) == 322
-assert set(paper_trials.condition) == {'null', 'signal'}
-for row in paper_summary.itertuples():
-    raw = paper_trials[(paper_trials.scenario == row.scenario) & (paper_trials.mu == row.mu)]
-    condition = 'null' if row.metric == 'false_positive_rate' else 'signal'
-    raw = raw[raw.condition == condition]
-    if row.metric == 'mean_index_jaccard':
-        assert abs(raw['jaccard_' + row.method].mean() - row.estimate) < 1e-8
-    else:
-        field = ('reject_' if row.task == 'detection' else 'exact_') + row.method
-        assert raw[field].sum() == row.count
-print('PASS: all 50,400 archived trials agree with the reported summaries.')
-plot_curves(paper_summary[paper_summary.task == 'detection'], 'power',
-            [(16,4),(12,5),(64,16),(64,4)], 'paper_detection')
-plot_curves(paper_summary[paper_summary.task == 'recovery'], 'exact_recovery',
-            [(16,4),(12,5),(64,16),(64,4)], 'paper_recovery')
-''', hidden=True, title='Load and verify the archived paper trials')
 md(r'''
 ## 1. Sweep matrix size and block size
 $n\in\{6,8,12,16,24,32,64\}$ and $\gamma\in\{.25,.40,.55,.70,.85\}$.

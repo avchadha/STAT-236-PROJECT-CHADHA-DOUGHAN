@@ -204,7 +204,7 @@ def validate_study(plan, summary, calibration, trials, cal_reps, eval_reps,
     return expected_trials
 
 
-def run_study(name, plan, output, seed=2362026, cal_reps=600, eval_reps=200,
+def run_study(name, plan, output, seed=2362026, cal_reps=1500, eval_reps=600,
               recovery=True, stream_keys=(101, 202), exact_cap=2500):
     """Execute every listed signal; resume only checkpoints matching this exact design."""
     design = dict(version=2, name=name, seed=seed, alpha=.05, cal_reps=cal_reps,

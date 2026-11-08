@@ -1,6 +1,7 @@
 """Coverage, data integrity, and independent mathematical checks for notebook studies."""
 import ast
 import io
+import json
 import math
 import sys
 import tempfile
@@ -21,12 +22,12 @@ from notebook_studies import (broad_plan, threshold_plan, power_law_plan, k_from
 class NotebookStudies(unittest.TestCase):
     def test_original_broad_design_preserved(self):
         plan, mapping = broad_plan()
-        archived = read_results(ROOT / 'results/gamma_sweep/summary.csv')
+        archived = json.loads((ROOT/'tests/fixtures/broad_design.json').read_text())
         self.assertEqual(len(mapping), 35)
         self.assertEqual(len(plan), 31)
-        self.assertEqual({(c['n'],c['k']) for c in plan}, set(zip(archived.n,archived.k)))
+        self.assertEqual({(c['n'],c['k']) for c in plan}, {(c['n'],c['k']) for c in archived})
         for cfg in plan:
-            mus = archived[(archived.n == cfg['n']) & (archived.k == cfg['k'])].mu.unique()
+            mus = next(c['mus'] for c in archived if (c['n'],c['k'])==(cfg['n'],cfg['k']))
             np.testing.assert_allclose(sorted(cfg['mus']), sorted(mus), rtol=0, atol=1e-12)
 
     def test_integer_crossover(self):

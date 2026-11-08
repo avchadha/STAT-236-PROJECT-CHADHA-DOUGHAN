@@ -1,0 +1,1322 @@
+{
+  "version": 2,
+  "name": "broad",
+  "seed": 2362026,
+  "alpha": 0.05,
+  "cal_reps": 1500,
+  "eval_reps": 600,
+  "recovery": true,
+  "stream_keys": [
+    101,
+    202
+  ],
+  "exact_cap": 2500,
+  "plan": [
+    {
+      "n": 6,
+      "k": 2,
+      "gamma_effective": 0.3868528072345416,
+      "requested_gammas": [
+        0.25,
+        0.4,
+        0.55
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 0.963497474789
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 1.482303807368
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 2.001110139946
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 2.668146853262
+        }
+      ],
+      "mus": [
+        0.0,
+        0.963497474789,
+        1.482303807368,
+        2.001110139946,
+        2.668146853262
+      ]
+    },
+    {
+      "n": 6,
+      "k": 3,
+      "gamma_effective": 0.6131471927654585,
+      "requested_gammas": [
+        0.7
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 0.624878317527
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 0.961351257734
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 1.297824197941
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 1.730432263921
+        }
+      ],
+      "mus": [
+        0.0,
+        0.624878317527,
+        0.961351257734,
+        1.297824197941,
+        1.730432263921
+      ]
+    },
+    {
+      "n": 6,
+      "k": 4,
+      "gamma_effective": 0.7737056144690831,
+      "requested_gammas": [
+        0.85
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 0.413894924076
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 0.636761421655
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 0.859627919234
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 1.146170558979
+        }
+      ],
+      "mus": [
+        0.0,
+        0.413894924076,
+        0.636761421655,
+        0.859627919234,
+        1.146170558979
+      ]
+    },
+    {
+      "n": 8,
+      "k": 2,
+      "gamma_effective": 0.33333333333333337,
+      "requested_gammas": [
+        0.25,
+        0.4
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 1.082320994505
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 1.665109222315
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 2.247897450126
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 2.997196600168
+        }
+      ],
+      "mus": [
+        0.0,
+        1.082320994505,
+        1.665109222315,
+        2.247897450126,
+        2.997196600168
+      ]
+    },
+    {
+      "n": 8,
+      "k": 3,
+      "gamma_effective": 0.5283208335737188,
+      "requested_gammas": [
+        0.55
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 0.743326181787
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 1.143578741211
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 1.543831300634
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 2.058441734179
+        }
+      ],
+      "mus": [
+        0.0,
+        0.743326181787,
+        1.143578741211,
+        1.543831300634,
+        2.058441734179
+      ]
+    },
+    {
+      "n": 8,
+      "k": 4,
+      "gamma_effective": 0.6666666666666667,
+      "requested_gammas": [
+        0.7
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 0.541160497253
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 0.832554611158
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 1.123948725063
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 1.498598300084
+        }
+      ],
+      "mus": [
+        0.0,
+        0.541160497253,
+        0.832554611158,
+        1.123948725063,
+        1.498598300084
+      ]
+    },
+    {
+      "n": 8,
+      "k": 5,
+      "gamma_effective": 0.7739760316291208,
+      "requested_gammas": [
+        0.85
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 0.398573991481
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 0.613190756125
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 0.827807520768
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 1.103743361024
+        }
+      ],
+      "mus": [
+        0.0,
+        0.398573991481,
+        0.613190756125,
+        0.827807520768,
+        1.103743361024
+      ]
+    },
+    {
+      "n": 12,
+      "k": 2,
+      "gamma_effective": 0.2789429456511298,
+      "requested_gammas": [
+        0.25,
+        0.4
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 1.230462007336
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 1.893018472825
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 2.555574938314
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 3.407433251085
+        }
+      ],
+      "mus": [
+        0.0,
+        1.230462007336,
+        1.893018472825,
+        2.555574938314,
+        3.407433251085
+      ]
+    },
+    {
+      "n": 12,
+      "k": 3,
+      "gamma_effective": 0.4421141086977403,
+      "requested_gammas": [
+        0.55
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 0.88371139148
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 1.359555986892
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 1.835400582304
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 2.447200776405
+        }
+      ],
+      "mus": [
+        0.0,
+        0.88371139148,
+        1.359555986892,
+        1.835400582304,
+        2.447200776405
+      ]
+    },
+    {
+      "n": 12,
+      "k": 5,
+      "gamma_effective": 0.647685462377997,
+      "requested_gammas": [
+        0.7
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 0.543974662301
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 0.836884095848
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 1.129793529395
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 1.506391372526
+        }
+      ],
+      "mus": [
+        0.0,
+        0.543974662301,
+        0.836884095848,
+        1.129793529395,
+        1.506391372526
+      ]
+    },
+    {
+      "n": 12,
+      "k": 8,
+      "gamma_effective": 0.8368288369533894,
+      "requested_gammas": [
+        0.85
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 0.292667907513
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 0.45025831925
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 0.607848730988
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 0.81046497465
+        }
+      ],
+      "mus": [
+        0.0,
+        0.292667907513,
+        0.45025831925,
+        0.607848730988,
+        0.81046497465
+      ]
+    },
+    {
+      "n": 16,
+      "k": 2,
+      "gamma_effective": 0.25,
+      "requested_gammas": [
+        0.25
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 1.325567087219
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 2.039333980338
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 2.753100873456
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 3.670801164608
+        }
+      ],
+      "mus": [
+        0.0,
+        1.325567087219,
+        2.039333980338,
+        2.753100873456,
+        3.670801164608
+      ]
+    },
+    {
+      "n": 16,
+      "k": 3,
+      "gamma_effective": 0.3962406251802891,
+      "requested_gammas": [
+        0.4
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 0.971085333143
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 1.493977435605
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 2.016869538066
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 2.689159384088
+        }
+      ],
+      "mus": [
+        0.0,
+        0.971085333143,
+        1.493977435605,
+        2.016869538066,
+        2.689159384088
+      ]
+    },
+    {
+      "n": 16,
+      "k": 4,
+      "gamma_effective": 0.5,
+      "requested_gammas": [
+        0.55
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 0.765316514635
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 1.177410022515
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 1.589503530396
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 2.119338040528
+        }
+      ],
+      "mus": [
+        0.0,
+        0.765316514635,
+        1.177410022515,
+        1.589503530396,
+        2.119338040528
+      ]
+    },
+    {
+      "n": 16,
+      "k": 6,
+      "gamma_effective": 0.646240625180289,
+      "requested_gammas": [
+        0.7
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 0.525610983775
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 0.808632282731
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 1.091653581687
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 1.455538108916
+        }
+      ],
+      "mus": [
+        0.0,
+        0.525610983775,
+        0.808632282731,
+        1.091653581687,
+        1.455538108916
+      ]
+    },
+    {
+      "n": 16,
+      "k": 10,
+      "gamma_effective": 0.8304820237218407,
+      "requested_gammas": [
+        0.85
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 0.281834372181
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 0.433591341817
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 0.585348311452
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 0.78046441527
+        }
+      ],
+      "mus": [
+        0.0,
+        0.281834372181,
+        0.433591341817,
+        0.585348311452,
+        0.78046441527
+      ]
+    },
+    {
+      "n": 24,
+      "k": 2,
+      "gamma_effective": 0.21810429198553155,
+      "requested_gammas": [
+        0.25
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 1.449050074729
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 2.229307807275
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 3.009565539821
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 4.012754053094
+        }
+      ],
+      "mus": [
+        0.0,
+        1.449050074729,
+        2.229307807275,
+        3.009565539821,
+        4.012754053094
+      ]
+    },
+    {
+      "n": 24,
+      "k": 3,
+      "gamma_effective": 0.34568712404340535,
+      "requested_gammas": [
+        0.4
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 1.082320994505
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 1.665109222315
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 2.247897450126
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 2.997196600168
+        }
+      ],
+      "mus": [
+        0.0,
+        1.082320994505,
+        1.665109222315,
+        2.247897450126,
+        2.997196600168
+      ]
+    },
+    {
+      "n": 24,
+      "k": 5,
+      "gamma_effective": 0.5064224831767222,
+      "requested_gammas": [
+        0.55
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 0.728142966906
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 1.120219949086
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 1.512296931267
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 2.016395908355
+        }
+      ],
+      "mus": [
+        0.0,
+        0.728142966906,
+        1.120219949086,
+        1.512296931267,
+        2.016395908355
+      ]
+    },
+    {
+      "n": 24,
+      "k": 9,
+      "gamma_effective": 0.6913742480868107,
+      "requested_gammas": [
+        0.7
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 0.42915957115
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 0.660245494078
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 0.891331417005
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 1.18844188934
+        }
+      ],
+      "mus": [
+        0.0,
+        0.42915957115,
+        0.660245494078,
+        0.891331417005,
+        1.18844188934
+      ]
+    },
+    {
+      "n": 24,
+      "k": 14,
+      "gamma_effective": 0.8304004496130023,
+      "requested_gammas": [
+        0.85
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 0.25507759131
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 0.392427063554
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 0.529776535797
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 0.706368714397
+        }
+      ],
+      "mus": [
+        0.0,
+        0.25507759131,
+        0.392427063554,
+        0.529776535797,
+        0.706368714397
+      ]
+    },
+    {
+      "n": 32,
+      "k": 2,
+      "gamma_effective": 0.19999999999999998,
+      "requested_gammas": [
+        0.25
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 1.53063302927
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 2.354820045031
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 3.179007060792
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 4.238676081056
+        }
+      ],
+      "mus": [
+        0.0,
+        1.53063302927,
+        2.354820045031,
+        3.179007060792,
+        4.238676081056
+      ]
+    },
+    {
+      "n": 32,
+      "k": 4,
+      "gamma_effective": 0.39999999999999997,
+      "requested_gammas": [
+        0.4
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 0.937317476291
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 1.442026886601
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 1.946736296911
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 2.595648395882
+        }
+      ],
+      "mus": [
+        0.0,
+        0.937317476291,
+        1.442026886601,
+        1.946736296911,
+        2.595648395882
+      ]
+    },
+    {
+      "n": 32,
+      "k": 6,
+      "gamma_effective": 0.5169925001442313,
+      "requested_gammas": [
+        0.55
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 0.686661024176
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 1.056401575656
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 1.426142127135
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 1.90152283618
+        }
+      ],
+      "mus": [
+        0.0,
+        0.686661024176,
+        1.056401575656,
+        1.426142127135,
+        1.90152283618
+      ]
+    },
+    {
+      "n": 32,
+      "k": 11,
+      "gamma_effective": 0.6918863237274595,
+      "requested_gammas": [
+        0.7
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 0.40504215995
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 0.623141784538
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 0.841241409126
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 1.121655212168
+        }
+      ],
+      "mus": [
+        0.0,
+        0.40504215995,
+        0.623141784538,
+        0.841241409126,
+        1.121655212168
+      ]
+    },
+    {
+      "n": 32,
+      "k": 19,
+      "gamma_effective": 0.849585502688717,
+      "requested_gammas": [
+        0.85
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 0.215332277012
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 0.331280426172
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 0.447228575333
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 0.59630476711
+        }
+      ],
+      "mus": [
+        0.0,
+        0.215332277012,
+        0.331280426172,
+        0.447228575333,
+        0.59630476711
+      ]
+    },
+    {
+      "n": 64,
+      "k": 2,
+      "gamma_effective": 0.16666666666666669,
+      "requested_gammas": [
+        0.25
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 1.711299751027
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 2.632768847734
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 3.554237944441
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 4.738983925921
+        }
+      ],
+      "mus": [
+        0.0,
+        1.711299751027,
+        2.632768847734,
+        3.554237944441,
+        4.738983925921
+      ]
+    },
+    {
+      "n": 64,
+      "k": 5,
+      "gamma_effective": 0.3869880158145604,
+      "requested_gammas": [
+        0.4
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 0.928284691123
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 1.428130294035
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 1.927975896947
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 2.570634529263
+        }
+      ],
+      "mus": [
+        0.0,
+        0.928284691123,
+        1.428130294035,
+        1.927975896947,
+        2.570634529263
+      ]
+    },
+    {
+      "n": 64,
+      "k": 9,
+      "gamma_effective": 0.5283208335737188,
+      "requested_gammas": [
+        0.55
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 0.606923285943
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 0.93372813222
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 1.260532978497
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 1.680710637996
+        }
+      ],
+      "mus": [
+        0.0,
+        0.606923285943,
+        0.93372813222,
+        1.260532978497,
+        1.680710637996
+      ]
+    },
+    {
+      "n": 64,
+      "k": 18,
+      "gamma_effective": 0.6949875002403854,
+      "requested_gammas": [
+        0.7
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 0.345107401965
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 0.530934464561
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 0.716761527157
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 0.95568203621
+        }
+      ],
+      "mus": [
+        0.0,
+        0.345107401965,
+        0.530934464561,
+        0.716761527157,
+        0.95568203621
+      ]
+    },
+    {
+      "n": 64,
+      "k": 34,
+      "gamma_effective": 0.8479104735417233,
+      "requested_gammas": [
+        0.85
+      ],
+      "signals": [
+        {
+          "reference": "scan",
+          "parameter": 0.0,
+          "mu": 0.0
+        },
+        {
+          "reference": "scan",
+          "parameter": 0.65,
+          "mu": 0.177313541193
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.0,
+          "mu": 0.272790063374
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.35,
+          "mu": 0.368266585555
+        },
+        {
+          "reference": "scan",
+          "parameter": 1.8,
+          "mu": 0.491022114074
+        }
+      ],
+      "mus": [
+        0.0,
+        0.177313541193,
+        0.272790063374,
+        0.368266585555,
+        0.491022114074
+      ]
+    }
+  ]
+}
