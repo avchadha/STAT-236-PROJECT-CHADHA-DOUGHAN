@@ -410,9 +410,13 @@ the ZIP to retain a run.
 code('''
 bundle = Path('STAT236_notebook_results.zip')
 with zipfile.ZipFile(bundle,'w',zipfile.ZIP_DEFLATED) as archive:
-    for path in sorted(OUTPUT.rglob('*')):
-        if path.is_file():
-            archive.write(path,path.relative_to(OUTPUT.parent).as_posix())
+    active_files = {path for folder in [broad_folder, threshold_folder, beta_folder]
+                    for path in folder.rglob('*') if path.is_file()}
+    active_files.update(OUTPUT / name for name in [
+        'broad_detection.png', 'broad_recovery.png', 'threshold_comparisons.png',
+        'theoretical_threshold_errors.png', 'power_law_regimes.png', 'false_positive_rates.png'])
+    for path in sorted(active_files):
+        archive.write(path,path.relative_to(OUTPUT.parent).as_posix())
 display(pd.DataFrame([
     {'study':'broad', 'configurations':len(broad_design), 'trials':len(broad_trials)},
     {'study':'thresholds', 'configurations':len(threshold_design), 'trials':len(threshold_trials)},
