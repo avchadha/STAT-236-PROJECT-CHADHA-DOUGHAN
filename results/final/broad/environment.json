@@ -1,8 +1,0 @@
-{
-  "numpy": "2.2.4",
-  "python": "3.11.9",
-  "platform": "Windows-10-10.0.26200-SP0",
-  "seed": 2362026,
-  "seed_scheme": "SeedSequence([seed, task_stream_key, n, k])",
-  "note": "Timing and SVD/score tie handling can vary across numerical environments."
-}

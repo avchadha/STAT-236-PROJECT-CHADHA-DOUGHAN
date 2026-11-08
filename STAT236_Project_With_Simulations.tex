@@ -2,10 +2,8 @@
 
 \usepackage[margin=1in]{geometry}
 \usepackage{graphicx}
-\usepackage{float}
+\graphicspath{{figures/}}
 \usepackage{amsmath, amssymb, amsthm}
-\IfFileExists{dsfont.sty}{\usepackage{dsfont}}{}
-\providecommand{\mathds}[1]{\mathbb{#1}}
 \usepackage{setspace}
 \usepackage{parskip}
 \usepackage{hyperref}
@@ -27,103 +25,129 @@
 \begin{titlepage}
     \centering
     \vspace*{0.24\textheight}
-    {\Huge \textbf{STAT 236 Final Project}}\\[1.5em]
-    {\Large Sparse Submatrix Detection}\\[3em]
+    {\Huge \textbf{STAT 236 Project}}\\[1.5em]
+    {\Large Square Gaussian Sparse Submatrix Detection}\\[3em]
     {\large Amrit Chadha, Faris Doughan}\\[1em]
     {\large Fall 2026}
 \end{titlepage}
 
 \section{Introduction}
 
-Sparse submatrix detection is a problem in high-dimensional statistics concerned with detecting a small, structured signal hidden within a large noisy matrix. As with many of the topics covered in this course, a central question is how the size of the planted submatrix and the strength of its signal affect our ability to distinguish it from random noise.
+Sparse submatrix detection is a problem in high-dimensional statistics
+concerned with detecting a small signal hidden within a large
+noisy matrix. In gene expression data, for example, a group of genes may
+be elevated together in a group of samples. As with the sparse testing
+problems covered in this course, a central question is how the size (sparsity regime) and strength of
+the signal, in this case the planted submatrix, affect our ability
+to distinguish it from random noise. 
 
+ From a purely
+statistical perspective, we would like to determine the weakest signal
+for which any test can reliably distinguish the two cases,
+regardless of its computational cost. However, the test that does this
+may require searching over an enormous number of possible submatrices.
+We therefore also ask how strong the signal must be for detection to be
+possible using an efficient algorithm, such as one running in polynomial
+time.
 
-An important feature of this problem is the distinction between statistical and computational limits of detection. From a purely statistical perspective, we would like to determine the weakest signal for which any hypothesis test can reliably distinguish the two cases, regardless of its computational cost. However, a statistically optimal procedure may require searching over an enormous number of possible submatrices. We therefore also ask how strong the signal must be for detection to be possible using an efficient algorithm, such as one running in polynomial time.
+The detection problem was studied by Butucea and Ingster (2013)
+\cite{BI2013}, who established asymptotic detection boundaries for the
+Gaussian model, and later by Ma and Wu (2015) \cite{MW2015}, who
+investigated its computational limits. For recovering the affected rows
+and columns, we draw on Butucea, Ingster and Suslina \cite{BIS2015} and
+Cai, Liang and Rakhlin \cite{CLR2017}. These papers work in considerable
+generality, so we restrict to square
+matrices with square planted submatrices and a common positive mean
+shift. Note that this change required altering and thus simplifying some of the forms of the results in the original papers, such as plugging in the same values for $\{m,n\}$ or $\{k_m,k_n\}$ in cases where rectangular matrices are considered.
 
-The problem was studied by Butucea and Ingster (2013) \cite{BI2013}, who established asymptotic detection boundaries for the Gaussian model, and later by Ma and Wu (2015) \cite{MW2015}, who investigated the computational limitations of detection. Our hope is to develop the theory in an accessible way, so that an undergraduate or graduate student can follow the main arguments and gain an understanding of the basic literature. To this end, we primarily consider square matrices with square planted submatrices and a common positive mean shift.
+We introduce the three main tests used in the literature for detection: the sum of
+all entries, the scan over all candidate blocks, and the maximum entry. Roughly, the sum can detect weaker signals for sufficiently large blocks, while scanning helps when the block is smaller. However,  scanning does become very computationally expensive. Ma and Wu show that, under a widely believed assumption known as the planted-clique hypothesis, no fast algorithm can match the scan for small blocks. In Section~\ref{sec:recovery}, we turn to recovering the affected rows and columns, comparing exhaustive search with spectral methods.
 
-The papers contain substantial technical detail, and working through every argument in full generality would be beyond what we could reasonably understand within the scope of this project. We explain the main detection guarantees in the text and put the calculations in the appendix. We then compare the detection regimes and discuss the stronger requirements for recovering the affected rows and columns.
+These comparisons concern asymptotic regimes, where the matrix size
+grows and the block size and signal strength may change with it.
+However, they do not necessarily tell us which procedure performs best on data. In that regard, in Section~\ref{sec:simulations}, we compare the methods on
+simulated data to see how well these predictions describe their
+detection and recovery performance. We discuss the results and possible extensions in Section~\ref{sec:discussion}.
 
-Table~\ref{tab:methods} summarizes the procedures discussed in this report.
-Here, $n$ is the number of rows and columns in the observed matrix,
-$k$ is the number of affected rows and columns, and $\mu$ is their
-common mean shift. The noise entries are independent standard Gaussian
-variables. We assume $k\to\infty$ and $k=o(n)$. For comparisons with
-polynomial block growth, we write $k=\lfloor n^\gamma\rfloor$, where
-$0<\gamma<1$.
-
+In Table~\ref{tab:methods}, we summarize the procedures discussed in this
+report. Here, $n$ is the number of rows and columns in the observed
+matrix, $k$ is the number of affected rows and columns, and $\mu$ is
+their common mean shift. The noise entries are independent standard
+Gaussian variables. We assume $k\to\infty$ and $k=o(n)$. In the table, we write $k=\lfloor n^\gamma\rfloor$,
+where $0<\gamma<1$, to describe different block sizes.
 \clearpage
-
-
 
 \begin{table}[!ht]
 \centering
 \small
 \setlength{\tabcolsep}{3.5pt}
-\renewcommand{\arraystretch}{1.2}
+\renewcommand{\arraystretch}{1.3}
 \caption{Detection and recovery procedures}
 \label{tab:methods}
-\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{2.3cm}
-  >{\raggedright\arraybackslash}p{2.5cm}
-  >{\raggedright\arraybackslash}p{1.8cm}
+\begin{tabularx}{\textwidth}{@{}
+  >{\raggedright\arraybackslash}p{2.15cm}
+  >{\raggedright\arraybackslash}p{2.2cm}
+  >{\raggedright\arraybackslash}p{2cm}
   >{\raggedright\arraybackslash}X
-  >{\raggedright\arraybackslash}p{2.1cm}@{}}
+  >{\raggedright\arraybackslash}p{2.2cm}@{}}
 \toprule
 \textbf{Procedure} & \textbf{Paper} & \textbf{Goal}
 & \textbf{Regime and guarantee} & \textbf{Cost} \\
 \midrule
 Sum & Butucea and Ingster~\cite{BI2013} & Detection
-& Statistically rate optimal for $\gamma>2/3$. Reliable when
+& Optimal for $\gamma>2/3$. Reliable when
 $\mu k^2/n\to\infty$.
 & $O(n^2)$ \\
 \addlinespace
 Scan & Butucea and Ingster~\cite{BI2013} & Detection
-& Attains the statistical exponent boundary for $\gamma<2/3$.
-The sufficient signal condition is given in Section~\ref{sec:scan}.
-& Exhaustive search \\
+& Attains the statistical detection boundary for $\gamma<2/3$.
+Reliable when
+$\liminf \mu^2k/[4\log(n/k)]>1$.
+& $O\left(k^2\binom{n}{k}^2\right)$; needs $k$ \\
 \addlinespace
 Maximum entry & Ma and Wu~\cite{MW2015} & Detection
-& A sufficient regime is
-$\liminf\mu/(2\sqrt{\log n})>1$, where individual entries carry
-strong signals.
+& Useful when $\gamma<1/2$, where it needs a weaker signal than the sum.
+Reliable when
+$\liminf\mu/(2\sqrt{\log n})>1$.
 & $O(n^2)$ \\
 \addlinespace
 Sum and scan & Butucea and Ingster~\cite{BI2013} & Detection
-& Combines the two detection regimes and attains the statistical
-boundary.
-& Includes exhaustive scan \\
+& Attains the statistical detection boundary across both
+sparsity regimes.
+& $O\left(k^2\binom{n}{k}^2\right)$; needs $k$ \\
 \addlinespace
 Maximizing block sum & Butucea, Ingster and Suslina~\cite{BIS2015}
 & Recovery
-& Attains the sharp statistical boundary for exact recovery stated
-in Section~\ref{sec:exact-recovery}.
-& Exhaustive search \\
+& Attains the sharp statistical boundary for exact recovery
+given in Section~\ref{sec:exact-recovery}.
+& $O\left(k^2\binom{n}{k}^2\right)$; needs $k$ \\
 \addlinespace
 Spectral projection & Cai, Liang and Rakhlin~\cite{CLR2017}
 & Recovery
 & For $k/\sqrt n\to\infty$. Succeeds when
 $\mu\geq C(\sqrt n/k+\sqrt{\log n/k})$.
-& Polynomial time \\
+& $O(rn^2)$ \\
 \addlinespace
 Thresholded spectral projection & Cai, Liang and Rakhlin~\cite{CLR2017}
 & Recovery
 & For $k/\sqrt n\to0$. Succeeds when
 $\mu/\sqrt{\log(n/k^2)}\to\infty$.
-& Polynomial time \\
+& $O(rn^2)$ \\
 \bottomrule
 \end{tabularx}
 
 \medskip
 \begin{minipage}{\textwidth}
 \footnotesize
-The max and spectral rows give sufficient conditions. Here, $C$ is a
-sufficiently large absolute constant. The exponent comparisons use
-strict inequalities, as explained in Section~\ref{sec:comparison}.
+ For the spectral methods, $r$ denotes the number
+of power iterations used to approximate the leading singular vectors.
+Computing a full SVD instead takes $O(n^3)$ operations.
+Here, $C$ is a sufficiently large constant. 
+
 \end{minipage}
 \end{table}
 
 \clearpage
-
 \section{Detection}\label{sec:detection}
 
 \subsection{The Model and Testing Error}
@@ -131,19 +155,17 @@ strict inequalities, as explained in Section~\ref{sec:comparison}.
 We begin with the standard Gaussian formulation of the problem. We observe
 a matrix $X\in\mathbb R^{n\times n}$ and consider the null hypothesis
 \[
-H_0\quad X_{ij}\overset{\mathrm{iid}}{\sim}N(0,1)
+H_0:\quad X_{ij}\overset{\mathrm{iid}}{\sim}N(0,1)
 \]
 against the alternative
 \[
-H_1\quad X_{ij}\overset{\mathrm{ind}}{\sim}
-N\left(\mu\mathds{1}_{\{i\in S,\,j\in T\}},1\right)
+H_1:\quad X_{ij}\overset{\mathrm{ind}}{\sim}
+N\left(\mu\mathbf{1}_{\{i\in S,\,j\in T\}},1\right)
 \]
 where $[n]=\{1,\ldots,n\}$ and $S,T\subseteq[n]$ are unknown subsets
-with $|S|=|T|=k$. The signal strength is $\mu>0$, and $\mathds{1}$
-denotes the indicator function. Thus, under the alternative, there is an unknown $k\times k$
+with $|S|=|T|=k$, and where the signal strength is $\mu>0$. Thus, under the alternative, there is an unknown $k\times k$
 submatrix whose entries have mean $\mu$, while all other entries have
-mean zero. The entries are independent under both hypotheses, and the
-affected rows and columns need not be consecutive.
+mean zero. 
 
 Our goal is to understand how the difficulty of detection changes as the
 matrix becomes larger. As $n$ increases, the block size and signal
@@ -154,29 +176,21 @@ conditions on $n$, $k$, and $\mu$ under which the testing errors tend to
 zero. Throughout the asymptotic results, we assume $k\to\infty$ and
 $k=o(n)$.
 
-Write $P_0$ for the null distribution and $P_{S,T,\mu}$ for the
-distribution under an alternative with affected rows $S$ and columns
-$T$. A test $\varphi_n$ takes value one when we reject $H_0$ and zero
-otherwise. We allow the test to depend on $n$, since its input and
-rejection threshold may change with the matrix size. Its total testing
-error is
+Let $\varphi_n$ be a test that takes value one when we
+reject $H_0$ and zero otherwise. We define the total testing error as
 \[
 R_n(\varphi_n)
 =P_0(\varphi_n=1)
 +\sup_{\substack{S,T\subseteq[n]\\|S|=|T|=k}}
 P_{S,T,\mu}(\varphi_n=0)
 \]
-The first term is the false positive rate. The second is the largest
-probability of missing a signal over all possible block locations. We
-say that reliable detection is achieved if $R_n(\varphi_n)\to0$, so that
-both errors vanish. This is the minimax testing criterion used by
-Butucea and Ingster~\cite{BI2013} and Ma and Wu~\cite{MW2015}, written
-in our notation.
+where $P_0$ is the null distribution and $P_{S,T,\mu}$ is the
+alternative distribution with affected rows $S$ and columns $T$.
+Reliable detection is achieved when $R_n(\varphi_n)\to0$.
 
 \subsection{The Sum Test}
 
-The first, and most natural (in fact, we both had thought of this before
-even looking at any papers), approach is to sum all entries in the
+The first and most natural approach is to sum all entries in the
 matrix and compare the result with what is expected under $H_0$. As
 only detection is required, such a method is able to aggregate the
 effects of individually small mean shifts without identifying the
@@ -184,22 +198,26 @@ specific indices. We define
 \[
 T_{\mathrm{sum}}=\frac1n\sum_{i=1}^n\sum_{j=1}^n X_{ij}
 \]
-This statistic is $N(0,1)$ under $H_0$ and $N(\Delta_n,1)$ under any
-alternative. Here, $\Delta_n=\mu k^2/n$ is the mean shift of the
-normalized sum. We reject when $T_{\mathrm{sum}}>c_n$, where $c_n$
-is the rejection threshold. Theorem 2.1 of Butucea and
-Ingster~\cite{BI2013} shows that reliable detection is possible when
-$\Delta_n\to\infty$. We can then choose $c_n$ to tend to infinity
-while staying below a fixed fraction of $\Delta_n$. Their error calculation is
-given in Appendix~\ref{app:sum}.
+The unnormalized sum has variance $n^2$ under both hypotheses and mean
+$\mu k^2$ under the alternative. Thus, this statistic is $N(0,1)$ under
+$H_0$ and $N(\Delta_n,1)$ under the alternative, where $\Delta_n=\mu k^2/n$
+is the mean shift of the normalized sum. We reject when
+$T_{\mathrm{sum}}>c_n$, where $c_n$ is the rejection threshold.
+Theorem 2.1 of Butucea and Ingster~\cite{BI2013} shows that reliable
+detection is possible when $\Delta_n\to\infty$. We can then choose $c_n$
+to tend to infinity while staying below a fixed fraction of $\Delta_n$,
+so that both errors tend to zero. If instead $\Delta_n$ stays bounded,
+then there is no choice of $c_n$ that makes both errors vanish. We go through their error calculation in
+Appendix~\ref{app:sum}.
 
 Computing the sum takes $O(n^2)$ operations, which is linear in the
 number of observed entries, and only $O(1)$ additional storage if the
-entries are processed sequentially. Its limitation is statistical in the sense that the
-unnormalized sum collects a mean shift of $\mu k^2$, but also noise
-with standard deviation $n$. For sufficiently small blocks, the many
-unaffected entries can obscure the signal. This motivates procedures
-that concentrate evidence within candidate submatrices instead.
+entries are processed sequentially. Its limitation is statistical in the
+sense that the unnormalized sum collects a mean shift of $\mu k^2$, but
+also noise with standard deviation $n$. For sufficiently small blocks,
+the many unaffected entries can obscure the signal. The sum also does
+not exploit the shared row and column structure, which motivates procedures
+that look at so-called candidate submatrices instead.
 
 \subsection{The Scan Test}\label{sec:scan}
 
@@ -218,170 +236,153 @@ Each candidate sum is standard
 normal under $H_0$, while the true block satisfies
 $Z_{S,T}\sim N(\mu k,1)$ under $H_1$. However, searching over many
 candidates makes it more likely that some sum will be large purely
-because of noise. The threshold must account for this search.
+because of noise. Thus, it is intuitive that the threshold must account for this search.
 
 Let $h_n$ denote the rejection threshold, so that we reject $H_0$ when
 $T_{\mathrm{scan}}>h_n$. Butucea and Ingster~\cite[Theorem 2.1]{BI2013}
 choose $h_n=\sqrt{2\log M_n}$. This threshold grows with the number
-of candidates to control false positives from the search. With this
-choice, they show that reliable detection is possible when
+of candidates to control false positives from the search. What is interesting is that it is
+approximately the largest value attained by $M_n$ independent standard
+normal variables. With this choice, they show that reliable detection
+is possible when
 \[
 \liminf_{n\to\infty}\frac{\mu^2k}{4\log(n/k)}>1
 \]
 Thus, it is sufficient for the entrywise mean shift $\mu$ to exceed
-$2\sqrt{\log(n/k)/k}$ by a fixed factor. Appendix~\ref{app:scan} follows
-their proof, including the control of the maximum over dependent
-candidate sums.
+$2\sqrt{\log(n/k)/k}$ by some fixed factor. We go through their proof in
+Appendix~\ref{app:scan}, including the control of the maximum over
+dependent candidate sums.
 
-The difficulty is computational. The scan requires knowledge of $k$,
-and exhaustive enumeration examines $M_n$ candidates. Computing each
+One of the main issues with this test is that the scan requires knowledge of $k$,
+and this enumeration process requires us to look at $M_n$ candidates. Computing each
 sum separately takes $O(k^2M_n)$ operations, which is superpolynomial
-under our assumptions on $k$. A better statistical guarantee can
-therefore come at a substantial computational cost.
+under our assumptions on $k$, so this better statistical guarantee
+comes at a substantial computational cost.
 
 \subsection{The Maximum-Entry Test}
 
-Another natural approach is related to the sparse inference problems
-discussed in the course, where we considered minimum-$p$ tests and
-Tukey's higher criticism. A minimum-$p$ test looks for a single
-unusually significant observation, while higher criticism can collect
-evidence from an excess of small $p$-values. In our setting, the first
-approach corresponds to testing whether any matrix entry is unusually
+Another natural approach is related to some of the problems
+discussed in the course, where we considered minimum-$p$ tests. A minimum-$p$ test looks for a single
+unusually significant observation. In our setting, this
+corresponds to testing whether any matrix entry is unusually
 large. Accordingly, define
 \[
 T_{\mathrm{max}}=\max_{1\leq i,j\leq n}X_{ij}
 \]
 Let $\Phi$ denote the standard normal distribution function. Since the
 one-sided $p$-value for each entry is $p_{ij}=1-\Phi(X_{ij})$, we have
-$\min_{i,j}p_{ij}=1-\Phi(T_{\mathrm{max}})$. Thus, this is precisely a
-minimum-$p$ test.
+$\min_{i,j}p_{ij}=1-\Phi(T_{\mathrm{max}})$. Higher criticism could also be applied to the $n^2$
+entries, which is also considered in Cai, Liang and Rakhlin~\cite{CLR2017}.
 
 For this test, let $u_n$ denote the rejection threshold, so that we
 reject when $T_{\mathrm{max}}>u_n$. Ma and Wu~\cite[Lemma 1]{MW2015}
 choose $u_n=\sqrt{(4+\varepsilon)\log n}$, where $\varepsilon>0$
-is a fixed constant. Their
-Theorem 2, condition (17), gives the sufficient regime
+is a fixed constant. The largest of the $n^2$ null entries is
+approximately $\sqrt{2\log n^2}=2\sqrt{\log n}$, so $u_n$ lies slightly
+above this. In their Theorem 2, condition (17), they give the sufficient
+condition
 \[
 \liminf_{n\to\infty}\frac{\mu}{2\sqrt{\log n}}>1
 \]
 Taking $\varepsilon$ sufficiently small then makes the total error tend
-to zero. The bound they use is stated and explained in
-Appendix~\ref{app:max}.
+to zero. We go through their bound in Appendix~\ref{app:max}.
 
 Like the sum, the maximum can be computed in $O(n^2)$ operations with
-$O(1)$ additional storage. It requires neither the block size nor its
-location. However, it does not exploit the shared row and column
-structure, since permuting all matrix entries leaves the statistic unchanged.
+$O(1)$ additional storage, and it requires neither the block size nor its
+location. Also like the sum, it does not exploit the shared row and
+column structure, since permuting all matrix entries leaves the
+statistic unchanged.
 
-\section{Comparison}\label{sec:comparison}
+\subsection{Comparison of Statistical Detection Regimes}\label{sec:comparison}
 
-\subsection{Statistical Detection Regimes}
+The sum and scan tests use the signal in different ways. The sum
+combines all $k^2$ positive mean shifts, so a sufficiently large block
+can be detected even when its individual entries are only slightly
+elevated. For a smaller block, however, summing the entire matrix adds
+many unaffected entries. The scan concentrates on candidate blocks
+instead, but must use a higher threshold because it searches over many
+possible locations. Butucea and Ingster~\cite[Theorem 2.1]{BI2013}
+combine these approaches by rejecting whenever either test rejects.
+The combined test therefore succeeds whenever either condition above
+holds.
 
-The sum and scan tests differ in how they use the affected entries.
-The sum gains from having many small shifts across the matrix. The
-scan avoids much of the noise from unaffected entries, but must
-compensate for the number of possible block locations. Butucea and
-Ingster~\cite[Theorem 2.1]{BI2013} combine the two tests, rejecting
-whenever either rejects, so that the combined procedure succeeds under
-either of the conditions above.
-
-Their lower bound shows why both conditions matter. Write
-$R_n^\star=\inf_\varphi R_n(\varphi)$, where the infimum is over all
-tests based on the full matrix. In the square case, their Theorem 2.2
-gives
+We can also ask whether a different test could detect substantially
+weaker signals. To address this, let
+$R_n^\star=\inf_\varphi R_n(\varphi)$ denote the smallest total testing
+error over all tests based on the observed matrix. Under our assumptions
+$k\to\infty$ and $k=o(n)$, Theorem 2.2 of Butucea and Ingster tells us that
 \[
 \frac{\mu k^2}{n}\longrightarrow0
 \qquad\text{and}\qquad
 \limsup_{n\to\infty}\frac{\mu^2k}{4\log(n/k)}<1
 \quad\Longrightarrow\quad R_n^\star\longrightarrow1
 \]
-The additional balance assumptions in the theorem hold in this square
-setting, and its proof uses alternatives with a common mean shift
-\cite[Section 5.1]{BI2013}. Thus, when both ways of accumulating
-signal are too weak, no other test can make the errors vanish. The
-strict inequalities do not settle all critical sequences at equality.
+Thus, if the total signal is negligible and the signal within a block
+is below the scan boundary, there is no test can make both errors vanish.
 
-To see which test is useful for different block sizes, follow Ma and
-Wu~\cite[Section 1.2]{MW2015} and write
-$k=\lfloor n^\gamma\rfloor$ and $\mu=n^{-\beta}$, with
-$0<\gamma<1$ and $0<\beta<1$. Larger $\beta$ means a weaker signal.
-Their statistical boundary, in our notation, is
+The theorem's additional assumptions (2.6) and (2.7) also hold in the formulation we are considering. In the paper's notation, the sampling fractions become $p=q=k/n$,
+so (2.7) holds trivially, and both log-log conditions in (2.6) reduce to
+\[
+\frac{\log\log(n/k)}{\log(n/k)}\longrightarrow0
+\]
+which holds because $n/k\to\infty$. 
+
+We can also summarize the detection regimes
+by considering block sizes and signal strengths that change
+polynomially with the matrix size, such as in Ma and Wu~\cite[Section 1.2]{MW2015}. In our notation, we write
+$k=\lfloor n^\gamma\rfloor$ and $\mu=n^{-\beta}$, where
+$0<\gamma,\beta<1$. Increasing $\gamma$ gives us a larger block, while
+increasing $\beta$ makes the signal decrease more quickly. Comparing
+the tests therefore is similar to asking how large $\beta$ can be before
+each test loses the ability to detect the block.
+
+For the sum, the standardized mean shift is
+$\mu k^2/n=n^{2\gamma-1-\beta}(1+o(1))$, which diverges when
+$\beta<2\gamma-1$. For the scan, reliable detection occurs when $\beta<\gamma/2$.
+So, since we can reject using either test, we take the larger
+of these two limits. Together with the lower bound above, this gives the boundary
 \[
 \beta_{\mathrm{stat}}
-=\max\left\{\frac\gamma2,\,2\gamma-1\right\}
+=\max\left\{\frac{\gamma}{2},\,2\gamma-1\right\}
 \]
-Detection is statistically possible for
-$\beta<\beta_{\mathrm{stat}}$ and impossible for
-$\beta>\beta_{\mathrm{stat}}$.
+Ma and Wu~\cite[Section 1.2]{MW2015}, which they denote $\beta^*$. Reliable detection is possible when $\beta<\beta_{\mathrm{stat}}$
+and impossible when $\beta>\beta_{\mathrm{stat}}$.
 
-For $2/3<\gamma<1$, which Ma and Wu call the moderately sparse regime,
-the sum attains the statistical rate. The block contributes enough
-total signal that searching for its location does not improve this
-rate. For $0<\gamma<2/3$, their highly sparse regime, scanning attains
-the statistical boundary at weaker signals than the sum. At
-$\gamma=2/3$, the two exponent expressions agree. The original
-conditions must still be used to account for logarithmic factors.
+The two expressions agree at $\gamma=2/3$. For $\gamma>2/3$,
+the sum can detect signals that decrease more quickly than those
+covered by the scan condition. There are enough affected entries
+that adding their small positive shifts across the entire matrix
+is sufficient. Searching for their location does not improve the
+detection exponent. Ma and Wu call this the moderately sparse regime.
 
-The max guarantee requires individual mean shifts larger than
-$2\sqrt{\log n}$ by a fixed factor. These signals are stronger than those described by
-$\mu=n^{-\beta}$. The max is inexpensive and useful when individual
-entries are informative, but Ma and Wu's stated sufficient bound does
-not give a sharp classification of its power for every block size.
+For $\gamma<2/3$, the scan can detect weaker signals than the sum.
+The block now occupies a smaller part of the matrix, so summing
+everything includes too much unaffected noise. Looking within
+candidate blocks avoids enough of that noise to compensate for the
+higher threshold required by the search. This is the highly sparse
+regime.
 
-\subsection{Computation}
-
-Both the sum and max take time linear in the number of entries. The
-statistically stronger scan guarantee for small blocks is obtained by
-a search whose direct implementation is superpolynomial. This alone
-does not prove that efficient detection is impossible, since another
-algorithm might avoid the search.
-
-Ma and Wu~\cite[Theorem 2 and Figure 1]{MW2015} address this question
-under the planted-clique hypothesis. This hypothesis rules out reliable
-randomized polynomial-time detection of a planted clique of size
-$N^\rho$, for fixed $0<\rho<1/2$, in a graph drawn from $G(N,1/2)$.
-Their reduction shows that an efficient submatrix detector in certain
-regimes would also give an efficient detector for such a clique.
-
-Ma and Wu allow a
-rectangular affected block with at least $k$ rows and columns and means
-bounded below by $\mu$. They formulate the computational theorem for
-a discretized Gaussian model that is statistically equivalent to the
-continuous model asymptotically. Their impossibility statement is for
-that larger alternative class. It does not automatically become an
-impossibility theorem for our exact-size, common-mean alternative.
-
-For their model, the computational exponent boundary is
-$\beta_{\mathrm{comp}}=\max\{0,2\gamma-1\}$. When
-$0<\gamma<2/3$, the interval
-$\beta_{\mathrm{comp}}<\beta<\beta_{\mathrm{stat}}$ is statistically
-possible but computationally intractable under that hypothesis. When
-$2/3<\gamma<1$, the two boundaries coincide and the sum already
-achieves the statistical rate. These are strict exponent comparisons.
-Logarithmic factors can matter at the boundaries.
-
-These asymptotic results do not determine the finite-sample power
-ordering of the tests. Our
-simulations will compare power at a common significance level and
-record the computational cost. Any heuristic approximation to the scan
-will be distinguished from the exhaustive statistic. Butucea and
-Ingster also use a heuristic search in their numerical study
-\cite[Section 3]{BI2013}.
+Note that the max test stll has its uses here, as we will see in the simulations. When $\gamma<1/2$,
+the sum requires that $\mu/n^{1-2\gamma}\to\infty$, so the individual
+shifts must grow polynomially with $n$. The max already succeeds
+when $\mu$ exceeds $2\sqrt{\log n}$ by a fixed factor
+\cite[Theorem 2, condition (17)]{MW2015}. It can therefore detect
+signals much weaker than those required by the sum in this regime,
+without searching over blocks. However, the scan can still detect much
+weaker signals by combining the affected entries.
 
 \section{Recovery}\label{sec:recovery}
 
-Detection establishes that an affected group exists, but does not tell
-us which rows and columns belong to it. Recovering these indices may
-be necessary if we want to investigate the group further. A recovery
-procedure returns estimates $\widehat S$ of the affected rows and
+In practical applications, recovering these indices of the signals may
+be necessary if we want to investigate the group further, where we require a 
+procedure that estimates $\widehat S$ of the affected rows and
 $\widehat T$ of the affected columns. We require
 \[
 \sup_{\substack{S,T\subseteq[n]\\|S|=|T|=k}}
 P_{S,T,\mu}\bigl((\widehat S,\widehat T)\ne(S,T)\bigr)
 \longrightarrow0
 \]
-This is exact recovery. Both index sets must be entirely correct, so
-even one incorrect row or column counts as an error.
+which is the condition for exact recovery.
 
 \subsection{Exact Recovery by Scanning}\label{sec:exact-recovery}
 
@@ -393,11 +394,10 @@ the estimator
 \sum_{i\in A,j\in B}X_{ij}
 \]
 This is the same search used by the scan test, but now we retain the
-maximizing indices. The true block must now have a larger sum than every incorrect
-candidate, including candidates that differ by just one row or column.
+maximizing indices. 
 
-For $k\to\infty$ and $k=o(n)$, their Theorems 2.1 and 2.3 give the
-sharp square-block recovery boundary
+For $k\to\infty$ and $k=o(n)$, their Theorems 2.1 and 2.3 (note this is 2.2 in the arxiv version) give the
+sharp recovery boundary of
 \[
 \mu_{\mathrm{rec}}^\star
 \sim\max\left\{
@@ -405,25 +405,16 @@ sharp square-block recovery boundary
 2\sqrt{\frac{\log(n/k)}{k}}
 \right\}
 \]
-A fixed multiplicative separation above this boundary permits exact
+such that some fixed multiplicative separation above this boundary permits exact
 recovery, while a fixed separation below it makes the minimax
-probability of an incorrect recovery tend to one.
-
-The first term explains a difficulty that detection does not have.
-Even if the true columns were known, the affected rows would have to
-be separated from every unaffected row. The standardized row sums
-have mean shift $\mu\sqrt k$, which must overcome both unusually
-large noise rows and unusually small affected rows. The second term
-accounts for the many competing block locations. 
-
-The exhaustive estimator has the same computational difficulty as
-the scan test. We next consider an efficient alternative.
+probability of an incorrect recovery go to one. The exhaustive estimator has the same computational difficulty as
+the scan test, so in a similar fashion to the previous section, we next consider an efficient alternative.
 
 \subsection{Spectral Recovery}
 
 Cai, Liang and Rakhlin~\cite{CLR2017} approach recovery using the
-singular vectors of the observed matrix. The mean matrix is
-$M=\mu\mathds{1}_S\mathds{1}_T^\top$, which has rank one. Here, $\mathds{1}_S$ and $\mathds{1}_T$ are the indicator vectors of
+singular vectors of the observed matrix. The mean matrix
+$M=\mu\mathbf{1}_S\mathbf{1}_T^\top$ has rank one, where $\mathbf{1}_S$ and $\mathbf{1}_T$ are the indicator vectors of
 the affected rows and columns. The left and right singular vectors of
 $M$ are proportional to these vectors.
 
@@ -442,43 +433,171 @@ succeeds whenever
 +\sqrt{\frac{\log n}{k}}\right)
 \]
 The authors suggest iterative power methods for the leading singular
-vectors, avoiding the search over block locations.
+vectors in order to avoid the search over block locations.
 
-\subsection{Smaller Blocks and Computational Limits}
+\subsection{Thresholding for Smaller Blocks}
 
-For $k/\sqrt n\to0$, Cai, Liang and Rakhlin first reduce the noise by
-soft-thresholding each entry. At a threshold level $t>0$, this replaces
-an entry $x$ by
-$\eta_t(x)=\operatorname{sign}(x)(|x|-t)_+$, where $(a)_+=\max\{a,0\}$.
-They then apply the same
-spectral projection and clustering steps to the thresholded matrix.
-Their Theorem 4 gives exact recovery when
+When $k/\sqrt n\to0$, the affected block occupies a small part of the
+matrix, and the leading singular vectors can be dominated by noise.
+Cai, Liang and Rakhlin~\cite{CLR2017} therefore modify the spectral
+method by filtering the entries before computing the singular vectors, a technique similar to others we have seen when discussing spectral clustering.
+
+Their Algorithm 2 uses soft thresholding at some $t>0$, replacing
+each entry $x$ by
+\[
+\eta_t(x)=\operatorname{sign}(x)(|x|-t)_+
+\]
+where $(a)_+=\max\{a,0\}$. Entries with magnitude at most $t$ become
+zero, while the remaining entries are reduced in magnitude by $t$.
+The spectral projection and grouping steps are then applied to this
+thresholded matrix.
+
+The idea behind this procedure is to remove many of the small noise entries before trying
+to estimate the signal directions. If the affected entries have
+sufficiently large positive shifts, enough of their signal remains
+for the spectral method to identify the shared rows and columns.
+However, thresholding also removes affected entries when their
+observed values are small. We therefore cannot expect it to improve
+recovery in every setting, particularly when the block contains many
+weak individual shifts.
+
+For this small-block regime, their Theorem 4 gives exact recovery when
 \[
 \frac{\mu}{\sqrt{\log(n/k^2)}}\longrightarrow\infty
 \]
-with a threshold level $t$ of order $\sqrt{\log(n/k^2)}$.
+using a threshold $t$ of order $\sqrt{\log(n/k^2)}$. This condition
+requires the signal to be sufficiently strong relative to the
+thresholding level.
 
-Under a hidden-clique recovery hypothesis, their Theorems 2--4 give a
-gap between statistical and computational recovery in the broader
-sub-Gaussian model, even in dense regimes where the detection gap
-disappears. The spectral upper bounds apply to our Gaussian
-observations, while the computational lower bounds are minimax
-statements over the paper's larger noise class.
-
-\clearpage
-\input{paper_simulation_section.tex}
+In Section 4, we compare this procedure with ordinary spectral
+recovery for the configurations satisfying $k^2<n$. Our implementation
+uses $t=\sqrt{\log(n/k^2)}$. Comparing the two methods at the same
+$(n,k,\mu)$ lets us examine whether removing noise compensates for
+the signal lost through thresholding.
 
 \label{end:main}
+\section{Simulations}\label{sec:simulations}
 
+\subsection{Setup}
+
+We use simulated matrices to compare how much signal the methods need
+for detection and recovery. In the first experiment, we increase $\mu$
+and measure how often each test detects the planted block. In the
+second, we measure how often the recovery methods identify all of its
+rows and columns correctly. The code for all simulations is available in this
+\href{https://colab.research.google.com/drive/1C2OdMZAjsLeIZLZrqyRspzQ4Wy2Dg4In?usp=sharing}{Google Colab notebook}.
+
+Each matrix has independent standard Gaussian noise, with $\mu$ added
+to randomly chosen sets of $k$ rows and columns. We use $n=16$ with
+$k=3,5,8$ and $n=512$ with $k=12,42,107$, which were sizes suggested by colab so that at each matrix size
+one block falls below $\sqrt n$, one between $\sqrt n$ and $n^{2/3}$,
+and one above $n^{2/3}$. 
+
+The detection tests use level $.05$. The sum and max thresholds come
+from their exact null distributions. We compute the scan exactly by
+going through all sets of $k$ rows and taking the $k$ columns with the
+largest sums over those rows, which is only feasible at $n=16$. Its
+threshold is the 95th percentile of the statistic over 1,500 noise
+matrices. 
+
+All recovery methods are given $k$. Exhaustive recovery uses the same
+search as the scan, so it is also restricted to $n=16$. The spectral
+methods take the $k$ largest row and column scores, rather than
+thresholding them as in Cai, Liang and Rakhlin~\cite{CLR2017}. For
+soft thresholding, once again note that we use $t=\sqrt{\log(n/k^2)}$ when $k^2<n$. 
+
+\subsection{Detection}
+
+For each $(n,k)$, we choose six values of $\mu$ that give the sum
+theoretical powers from $.05$ to $.99$. The dashed curve in
+the figure is this theoretical power,
+$1-\Phi(z_{.95}-\mu k^2/n)$, which the simulated power of the sum
+follow closely. At $\mu=0$, all tests reject close to $5\%$ of the
+time.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{detection_power.png}
+\caption{Detection power over 300 trials at each signal strength. The dashed curves give the exact power of the sum test.}
+\label{fig:sim-detection}
+\end{figure}
+
+For small blocks, scanning helps by concentrating on the affected
+entries. At $n=16$ and $k=3$, the scan has power around $.7$ at
+$\mu\approx1.7$, while the sum is near $.2$. At $k=8$, the two are
+close, since the block now contributes enough total shift for the sum
+to work. The combined test generally follows the stronger of the two.
+
+At $n=512$, the max works well for the smallest block, where
+individual shifts are large, but does little for $k=42$ and $k=107$.
+There the sum detects many weak shifts that produce no especially
+large entry. This switch between $k=12$ and $k=42$ is consistent with
+the crossover near $k=\sqrt n$ in Section 2.5
+
+\subsection{Recovery}
+
+For each $(n,k)$, we choose signals between half and twice the recovery
+boundary in Section~\ref{sec:exact-recovery}, marked by the dashed
+lines in the figures. Since this boundary is
+asymptotic, we use it as a reference (in the sense that we are not expecting a drop exactly at the dashed line). Still, at $n=16$ the exhaustive error drops to around $.2$ at
+that value.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{recovery_error.png}
+\caption{Exact recovery error over 300 trials at each signal strength. The dashed lines mark the asymptotic recovery reference.}
+\label{fig:sim-recovery}
+\end{figure}
+
+Exhaustive recovery generally makes fewer errors than spectral
+recovery at intermediate signals. For example, at the reference with
+$n=16$ and $k=3$, their errors are roughly $.2$ and $.5$. Recovery also generally needs a stronger signal than detection. At $n=512$ and $k=107$,
+the sum detects the block almost every time once $\mu$ is about $.2$,
+but spectral recovery still fails at $\mu$ around $.5$. Soft thresholding helps for the smaller block at $n=512$ and $k=12$.
+Near $\mu=2$, it cuts the error from almost $1$ to about $.22$.
+\section{Discussion}\label{sec:discussion}
+
+Overall, the simulations show the patterns predicted by the theory in some sense.
+The sum detects many weak shifts, scanning helps for small blocks but
+can only be computed for small matrices, and the max is useful 
+when there are individual entries that stand out in some small submatrix. Detecting a block is much easier
+than recovering it exactly, and soft thresholding helps spectral
+recovery for small blocks. These results do have some limitations, since exact scanning and exhaustive
+recovery were only possible at $n=16$, which is far from the
+asymptotic setting. This is also true in general for the other simulations, but it is still interesting to see nonetheless.
+
+There are also several extensions of the problem that we did not
+cover. We restricted to square matrices and square blocks, but
+Butucea and Ingster~\cite{BI2013} and Butucea, Ingster and
+Suslina~\cite{BIS2015} allow rectangular ones. Their boundaries then
+depend on the row and column dimensions separately, and for recovery
+the rows and the columns each contribute their own term. Butucea and
+Ingster also consider the case where the block size is only known to
+lie in some given set, as opposed to knowing it exactly as we have here. They also treat unknown noise variance,
+non-Gaussian data from an exponential family, and blocks whose entries
+can be shifted in either direction. Since positive and negative shifts
+could cancel in the sum, it would make sense that tests for that case should use squared entries
+instead. Finally, if the affected rows and columns must be consecutive,
+there are far fewer possible locations, and detection becomes easier.
+
+It would also be interesting to think about the scan algorithmically.
+The exact scan searches over every set of $k$ rows, which is what
+makes it so expensive. We discussed such ideas in class for vertex hunting, where there are techniques that use the geometry of the problem instead of trying each combination of vertices. A
+similar idea for the scan would be to build the block step by step, or
+to alternate between choosing the best rows for the current columns
+and the best columns for the current rows, as in the heuristic search
+that Butucea and Ingster use in their simulations. The results of Ma
+and Wu suggest that no efficient procedure can match the exact scan for
+small blocks, so it would be an interesting question as to how close such a
+procedure comes in practice, especially at matrix sizes where the scan is out of reach, given its statistical optimality (as a standalone or used in combination with the sum, depending on the regimes discused previosly).
 \clearpage
 \appendix
 \section{Detection Calculations}
 
-The sum and scan calculations follow Appendix A.1 of Butucea and
+Some notes on the notation to maintain consistency. This was part of the original focus of the first draft, but after some feedback from Prof Ke, we decided to move these here instead of removing them. These sum and scan calculations follow Appendix A.1 of Butucea and
 Ingster~\cite{BI2013}. Their large matrix dimensions $N,M$ are both
 $n$ here, their submatrix dimensions are both $k$, and their parameter
-$a$ is our $\mu$. For Ma and Wu~\cite{MW2015}, the change of notation
-is $p=n$ and $\lambda=\mu$.
+$a$ is our $\mu$. For Ma and Wu~\cite{MW2015}, we make the changes $p=n$ and $\lambda=\mu$.
 
 \subsection{The Sum Test}\label{app:sum}
 
@@ -504,8 +623,6 @@ P_0(T_{\mathrm{sum}}>c_n)=\Phi(-c_n)
 \sup_{S,T}P_{S,T,\mu}(T_{\mathrm{sum}}\leq c_n)
 =\Phi(c_n-\Delta_n)
 \]
-These are the expressions used in the paper's proof. Its upper bound
-on the Type II error is an equality in our common-mean model.
 
 Following their threshold choice, suppose $\Delta_n\to\infty$ and
 take $c_n\to\infty$ with $c_n\leq\eta\Delta_n$ for a fixed
@@ -523,17 +640,17 @@ has variance $k^2$. Hence $Z_{A,B}\sim N(0,1)$ under $H_0$.
 Under an alternative, the true candidate satisfies
 $Z_{S,T}\sim N(\mu k,1)$.
 
-For any proposed rejection threshold $u>0$, a union bound gives
+For any proposed rejection threshold $u>0$, we can union bound to get
 \[
 P_0(T_{\mathrm{scan}}>u)
 \leq\sum_{\substack{A,B\subseteq[n]\\|A|=|B|=k}}
 P_0(Z_{A,B}>u)
 =M_n\Phi(-u)
 \]
-This does not require independence between candidate sums, which is
+Note that this does not require independence between candidate sums, which is
 important because overlapping submatrices share observations.
 
-Set the rejection threshold to $h_n=\sqrt{2\log M_n}$, so that we
+We then set the rejection threshold to $h_n=\sqrt{2\log M_n}$, so that we
 reject when $T_{\mathrm{scan}}>h_n$. Butucea and Ingster use the Gaussian
 tail estimate
 \[
@@ -542,17 +659,14 @@ tail estimate
 \]
 Here, $\asymp$ means that the quantities are bounded above and below
 by fixed positive multiples of one another for sufficiently large
-$u$. Since $M_n\to\infty$, we have $h_n\to\infty$, and their
-argument gives
+$u$. Since $M_n\to\infty$, we have $h_n\to\infty$, and this means that
 \[
 P_0(T_{\mathrm{scan}}>h_n)
 \leq M_n\Phi(-h_n)
 =O\left(\frac{M_ne^{-h_n^2/2}}{h_n}\right)
 =O\left(\frac1{h_n}\right)\longrightarrow0
 \]
-The final equality follows from $h_n^2/2=\log M_n$. The factor
-$1/h_n$ makes the error vanish at this threshold.
-
+The final equality follows from $h_n^2/2=\log M_n$. 
 We next control the Type II error. Under any alternative, the maximum
 includes the true block, so $T_{\mathrm{scan}}\geq Z_{S,T}$.
 Consequently,
@@ -564,29 +678,31 @@ P_{S,T,\mu}(T_{\mathrm{scan}}\leq h_n)
 The bound is independent of $S,T$, so it also holds for the worst-case
 Type II error.
 
-Equation (A.1) of the paper gives, in the square case,
+Equation (A.1) of the paper gives, in the square case (after some simplifications),
 \[
 \log M_n\sim2k\log(n/k)
 \qquad h_n\sim2\sqrt{k\log(n/k)}
 \]
 The condition $\liminf\mu^2k/[4\log(n/k)]>1$ therefore gives a fixed
-multiplicative separation between $\mu k$ and $h_n$. Since
+sort of multiplicative separation between $\mu k$ and $h_n$. Since
 $h_n\to\infty$, their difference tends to infinity, so the Type II
-error also vanishes. This is the square specialization of condition
-(2.5) in their Theorem 2.1.
+error also vanishes. 
 
 \subsection{The Maximum-Entry Test}\label{app:max}
 
 Lemma 1, equation (12), of Ma and Wu~\cite{MW2015} states that, for
 $u_n=\sqrt{(4+\varepsilon)\log n}$ with fixed $\varepsilon>0$,
 \[
-R_n\!\left(\mathds{1}_{\{T_{\mathrm{max}}>u_n\}}\right)
+R_n\!\left(\mathbf{1}_{\{T_{\mathrm{max}}>u_n\}}\right)
 \leq n^{-\varepsilon/2}
 +\exp\left[-\frac12(\mu-u_n)_+^2\right]
 \]
-Here, $x_+=\max\{x,0\}$. We follow their argument in Section 6.1.
+where $x_+=\max\{x,0\}$. Their supremum is over a larger class of
+alternatives that contains ours, so the bound also holds for $R_n$.
+Ma and Wu obtain this bound by applying their scan argument from
+Section 6.1 with $k=1$.
 Under $H_0$, a union bound and the Gaussian Chernoff bound used
-there give
+there lead to the conclusion that
 \[
 P_0(T_{\mathrm{max}}>u_n)
 \leq n^2\Phi(-u_n)
@@ -601,11 +717,15 @@ P_{S,T,\mu}(T_{\mathrm{max}}\leq u_n)
 =\Phi(u_n-\mu)
 \leq\exp\left[-\frac12(\mu-u_n)_+^2\right]
 \]
-This holds for every location and gives the stated total error bound.
+
 In Section 4.3, the authors apply it under the second condition in
 (17) of Theorem 2. If $\liminf\mu/(2\sqrt{\log n})>1$, taking
-$\varepsilon$ sufficiently small makes $\liminf\mu/u_n>1$, and
-both error bounds tend to zero.
+$\varepsilon$ sufficiently small makes $\liminf\mu/u_n>1$. Since
+$u_n\to\infty$, this gives $\mu-u_n\to\infty$, and both error bounds
+tend to zero.
+
+
+
 
 \clearpage
 \begin{thebibliography}{99}
@@ -644,24 +764,3 @@ submatrix localization in a large noisy matrix.
 \end{thebibliography}
 
 \end{document}
-
-% Original working log from the supplied draft.
-% \section*{Project Tracker}
-% 
-% \renewcommand{\arraystretch}{1.8}
-% \begin{tabularx}{\textwidth}{|l|l|X|}
-% \hline
-% \textbf{Date} & \textbf{Who} & \textbf{What} \\
-% \hline
-%  10/25/2026 & Faris & created doc. wrote intro \\
-% \hline
-%  10/25/2026 & Amrit & fleshed out outline. wrote draft of all of 2. made bibliography \\
-% \hline
-% 10/30/2026 & Amrit & wrote draft of all of 3 and 4. \\
-% \hline
-% 11/2/2026  & Faris & Read what you wrote. just some ideas and notes. I think we should focus the project on a couple of different tests and their uses (we dont have to cover everything, would be a bit too much as tracy might suspect ai cuz who can read and understand all these papers) \newline \newline ~~~~~~~~~~~~~~~~~~
-% if instead like eg through 2 through 2.2 there is some theory development and rigor as opposed to section 3 which is just stating results. I mean these "other tests" and or other questions should be like a page max with a paragraph of discussion for each because the assumption is that we read these like 2-3 main papers that develop the results we are summarizing in depth. \\
-% \hline
-% 11/5/2026 & Faris & Changed a lot. added more theory and explanations. removed the sections that just stated results as need to rewrite \\
-% \hline
-% \end{tabularx}

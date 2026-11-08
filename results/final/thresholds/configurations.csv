@@ -1,5 +1,0 @@
-n,k,gamma_effective,k_over_sqrt_n,detection_regime,recovery_regime,exact_scan,soft_spectral,signal_values,mu_min,mu_max
-12,2,0.2789429456511298,0.5773502691896258,highly sparse,small block,True,True,19,0.0,6.305434671504
-12,5,0.647685462377997,1.4433756729740645,highly sparse,large block,True,False,16,0.0,6.305434671504
-64,4,0.33333333333333337,0.5,highly sparse,small block,False,True,19,0.0,8.15733592135
-64,16,0.6666666666666667,2.0,crossover,large block,False,False,16,0.0,8.15733592135
