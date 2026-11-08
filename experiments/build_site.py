@@ -5,6 +5,7 @@ import csv
 import json
 import re
 from pathlib import Path
+from site_layout import reorganize_methods
 
 ROOT=Path(__file__).resolve().parents[1]
 FINAL=ROOT/'results/final'
@@ -39,6 +40,7 @@ def build():
     end=source.index('</section>',start)+len('</section>')
     compact='''<section id="rectangles" class="section-pad geometry-note" aria-labelledby="rectangles-title"><div class="container"><div class="section-head"><h2 id="rectangles-title">Beyond square blocks</h2></div><p>The report and simulations consider <strong>square <em>n × n</em> Gaussian matrices containing square <em>k × k</em> planted submatrices</strong>, with unknown, not necessarily consecutive row and column sets. Rectangular affected blocks can behave differently: pooling across a long dimension may then be helpful. They appear in the literature's broader lower-bound formulations, but are not a separate focus of our present analysis.</p></div></section>'''
     source=source[:start]+compact+source[end:]
+    source=reorganize_methods(source)
     report=ROOT/'STAT236_Project_With_Simulations.pdf'
     assert report.is_file(),'Compile the current report before building the website.'
     encoded='data:application/pdf;base64,'+base64.b64encode(report.read_bytes()).decode('ascii')
@@ -46,6 +48,8 @@ def build():
     assert count==2,count
     css=(ROOT/'site/empirical.css').read_text(encoding='utf-8')
     js=(ROOT/'site/empirical.js').read_text(encoding='utf-8')
+    css+='\n'+(ROOT/'site/procedure-tree.css').read_text(encoding='utf-8')
+    js+='\n'+(ROOT/'site/procedure-tree.js').read_text(encoding='utf-8')
     source=source.replace('</head>','<style>\n'+css+'\n</style>\n</head>',1)
     payload='<script id="empirical-results-json" type="application/json">'+json.dumps(data,separators=(',',':'),allow_nan=False)+'</script>'
     payload+='<script id="empirical-metadata-json" type="application/json">'+json.dumps(dict(manifest=manifest,designs=designs),separators=(',',':'),allow_nan=False)+'</script>'

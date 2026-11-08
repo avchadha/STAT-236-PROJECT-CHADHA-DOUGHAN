@@ -47,9 +47,10 @@ pdflatex -interaction=nonstopmode -halt-on-error STAT236_Project_With_Simulation
 python experiments/build_site.py
 python experiments/export_notebook.py
 python tests/test_final_study.py
+python tests/test_site_layout.py
 ```
 
-`build_notebook.py` embeds the statistical functions directly from `run_experiments.py`; running the notebook needs no custom project imports or archived downloads. The three designs use independent deterministic `SeedSequence([seed, task_stream_key, n, k])` streams with master seed 2362026. Completed configurations are verified and resumed only for matching settings. `run_final_study.py` reuses those verified checkpoints and exports the active dataset. `build_site.py` writes identical generated pages at the root and `site/index.html`, embedding the same verified summaries and current report. The website's visitor-run simulator is a separate demonstration.
+`build_notebook.py` embeds the statistical functions directly from `run_experiments.py`; running the notebook needs no custom project imports or archived downloads. The three designs use independent deterministic `SeedSequence([seed, task_stream_key, n, k])` streams with master seed 2362026. Completed configurations are verified and resumed only for matching settings. `run_final_study.py` reuses those verified checkpoints and exports the active dataset. `build_site.py` writes identical generated pages at the root and `site/index.html`, embedding the same verified summaries and current report. The website's visitor-run simulator is a separate demonstration. Detection and recovery procedures follow separate connected branches; the recovery boundary precedes the comparison table. Layout tests preserve the original text and formulas of all eight procedure descriptions.
 
 The notebook saves checkpoints in `outputs_notebook/` and writes `STAT236_notebook_results.zip`. Colab storage is temporary: download the ZIP to keep a run. Numerical-library tie handling and measured times can vary across machines; recorded environment details accompany the results.
 
