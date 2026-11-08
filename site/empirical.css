@@ -11,3 +11,5 @@
 .geometry-note{border-top:1px solid #eee;background:#fcfcfb;padding-block:clamp(42px,6vw,74px)}.geometry-note .section-head{margin-bottom:14px}.geometry-note p{max-width:880px;color:#4b515c;font-size:15px;line-height:1.85;margin:0}
 @media(max-width:860px){.emp-workspace{grid-template-columns:1fr;gap:4px}.emp-right{margin-top:25px;border-left:0;border-top:1px solid #e3e3e6;padding:18px 0 0}.emp-study-picker{grid-template-columns:auto 1fr}.emp-study-picker p{grid-column:1/-1}.emp-theory-check{grid-template-columns:1fr;gap:15px}}
 @media(max-width:540px){.emp-controls{gap:12px}.emp-controls label{width:100%}.emp-controls select{width:100%;min-width:0}.emp-study-picker{grid-template-columns:1fr}.emp-chart-holder svg{min-height:235px}.emp-tab{padding:9px 13px}.emp-table{font-size:12px}.emp-theory-check{margin-top:25px}}
+
+.mc-results table{width:100%;border-collapse:collapse;font-size:14px}.mc-results th,.mc-results td{text-align:left;padding:12px 8px;border-bottom:1px solid #e5e5e5}.mc-results th{font-size:12px;color:#696a70}

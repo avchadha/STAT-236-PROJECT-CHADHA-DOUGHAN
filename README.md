@@ -20,13 +20,15 @@ python experiments/build_notebook.py
 python tests/test_notebook_studies.py
 python experiments/execute_notebook.py
 python experiments/export_notebook.py
+python experiments/export_notebook_results.py
+python experiments/build_site.py
 ```
 
-The notebook has been simplified independently of the larger published study below. Its seed, design, and results differ from the paper and website's existing results.
+This is the notebook of record. The website’s Simulation results section uses its exported results in `results/notebook/`; its browser simulator independently implements the same four detection methods. The paper retains the earlier study below, clearly distinguished from the current notebook.
 
-## Published paper and website studies
+## Earlier paper study
 
-The paper and website use [`results/final/`](results/final/), generated with seed **2362026**. Every detection configuration uses **1,500 independent null calibration matrices** and **600 fresh null plus 600 planted matrices per signal**. Recovery uses **600 additional planted matrices per signal**.
+The paper uses [`results/final/`](results/final/), generated with seed **2362026**. Every detection configuration uses **1,500 independent null calibration matrices** and **600 fresh null plus 600 planted matrices per signal**. Recovery uses **600 additional planted matrices per signal**.
 
 | Study | Grid | Evaluation trials |
 |---|---|---:|
@@ -67,12 +69,11 @@ python experiments/run_final_study.py
 python experiments/build_final_report.py
 pdflatex -interaction=nonstopmode -halt-on-error STAT236_Project_With_Simulations.tex
 pdflatex -interaction=nonstopmode -halt-on-error STAT236_Project_With_Simulations.tex
-python experiments/build_site.py
 python tests/test_final_study.py
 python tests/test_site_layout.py
 ```
 
-The three published designs use independent deterministic `SeedSequence([seed, task_stream_key, n, k])` streams with master seed 2362026. Completed configurations are verified and resumed only for matching settings. `run_final_study.py` reuses those verified checkpoints and exports the published dataset. `build_site.py` writes identical generated pages at the root and `site/index.html`, embedding the same verified summaries and current report. The website's visitor-run simulator is a separate demonstration. Detection and recovery procedures follow separate connected branches; the recovery boundary precedes the comparison table. Layout tests preserve the original text and formulas of all eight procedure descriptions.
+The three published designs use independent deterministic `SeedSequence([seed, task_stream_key, n, k])` streams with master seed 2362026. Completed configurations are verified and resumed only for matching settings. `run_final_study.py` reuses those verified checkpoints and exports the published dataset. `build_site.py` writes identical pages at the root and `site/index.html`, using the seed-236 notebook summaries and embedding the existing report. Its build rejects exports whose notebook or summary hash has changed. Run `export_notebook_results.py` to refresh the website data by executing the canonical notebook code, without changing the notebook. The website's visitor-run simulator is a separate demonstration. Detection and recovery procedures follow separate connected branches; the recovery boundary precedes the comparison table. Layout tests preserve the original text and formulas of all eight procedure descriptions.
 
 The simplified notebook keeps its labeled data and per-matrix decisions in memory and saves its figures in the notebook itself. Numerical-library tie handling can vary across machines.
 

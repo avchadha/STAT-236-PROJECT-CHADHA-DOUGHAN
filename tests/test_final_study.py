@@ -39,20 +39,24 @@ class FinalStudy(unittest.TestCase):
         bounds=read_results(final/'thresholds/theory_threshold_checks.csv')
         self.assertEqual(len(bounds),350);self.assertTrue(bounds.consistent.all())
 
-    def test_website_has_only_current_results(self):
-        root=ROOT/'index.html';soup=BeautifulSoup(root.read_text(encoding='utf-8'),'html.parser')
-        data=json.loads(soup.find('script',id='empirical-results-json').string)
-        meta=json.loads(soup.find('script',id='empirical-metadata-json').string)
-        self.assertEqual({r['study'] for r in data},{'broad','thresholds','power_laws'})
-        self.assertTrue(all(r['reps']==600 for r in data))
-        self.assertFalse(any(r['s'] in ['D1','D2','D3','D4','R1','R2','R3','R4'] for r in data))
-        self.assertEqual(meta['manifest']['evaluation_trials'],577800)
-        index={(r['study'],r['task'],r['n'],r['k'],r['mu'],r['m'],r['metric']):r for r in data}
-        for study in meta['manifest']['studies']:
-            for r in read_results(ROOT/'results/final'/study['name']/'summary.csv').itertuples():
-                key=(study['name'],r.task,r.n,r.k,r.mu,r.method,r.metric)
-                self.assertAlmostEqual(index[key]['y'],r.estimate,places=14)
-        self.assertEqual(root.read_bytes(),(ROOT/'site/index.html').read_bytes())
+    def test_website_uses_canonical_notebook(self):
+        import hashlib
+        soup=BeautifulSoup((ROOT/'index.html').read_text(encoding='utf-8'),'html.parser')
+        rows=json.loads(soup.find('script',id='empirical-results-json').string)
+        meta=json.loads(soup.find('script',id='notebook-provenance-json').string)
+        self.assertEqual(meta['seed'],236)
+        self.assertEqual(meta['evaluation_reps'],600)
+        self.assertEqual(meta['finite_matrices'],21600)
+        self.assertEqual(meta['notebook_sha256'],hashlib.sha256((ROOT/meta['notebook']).read_bytes()).hexdigest())
+        exported=read_results(ROOT/'results/notebook/summary.csv')
+        self.assertEqual(len(rows),238)
+        self.assertEqual(len(rows),len(exported))
+        self.assertEqual({r['study'] for r in rows},{'finite','growing'})
+        for actual,expected in zip(rows,exported.to_dict('records')):
+            self.assertAlmostEqual(actual['error'],expected['error'],places=14)
+            if actual['task']=='detection' and actual['study']=='finite':
+                self.assertAlmostEqual(actual['error'],(actual['false_positive']+actual['false_negative'])/2)
+        self.assertEqual((ROOT/'index.html').read_bytes(),(ROOT/'site/index.html').read_bytes())
 
 
 if __name__=='__main__':
