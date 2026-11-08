@@ -25,17 +25,17 @@
     displayCols=state.group&&state.planted?[...draw.cols,...natural.filter(i=>!colSet.has(i))]:natural;
     const raster=document.createElement('canvas');raster.width=n;raster.height=n;
     const rc=raster.getContext('2d'), pixels=rc.createImageData(n,n);
-    const center=[250,248,244],blue=[51,94,133],red=[180,81,49];
+    const center=[255,255,255],blue=[51,94,133],red=[180,81,49];
     for(let y=0;y<n;y++)for(let x=0;x<n;x++){
       const value=draw.values[displayRows[y]*n+displayCols[x]], mix=Math.min(1,Math.abs(value)/3),end=value<0?blue:red,base=(y*n+x)*4;
       for(let c=0;c<3;c++)pixels.data[base+c]=Math.round(center[c]+mix*(end[c]-center[c]));pixels.data[base+3]=255;
     }
     rc.putImageData(pixels,0,0);
-    context.clearRect(0,0,640,640);context.fillStyle='#fffefa';context.fillRect(0,0,640,640);
+    context.clearRect(0,0,640,640);context.fillStyle='#ffffff';context.fillRect(0,0,640,640);
     context.imageSmoothingEnabled=false;const offset=state.reveal&&state.planted?12:0, size=640-offset;
     context.drawImage(raster,offset,offset,size,size);
     if(n<=32){context.strokeStyle='rgba(255,255,255,.2)';context.lineWidth=.5;for(let i=1;i<n;i++){const p=offset+i*size/n;context.beginPath();context.moveTo(p,offset);context.lineTo(p,640);context.moveTo(offset,p);context.lineTo(640,p);context.stroke();}}
-    if(offset){context.fillStyle='#a1482c';displayRows.forEach((r,i)=>{if(rowSet.has(r))context.fillRect(0,offset+i*size/n,8,size/n);});displayCols.forEach((c,j)=>{if(colSet.has(c))context.fillRect(offset+j*size/n,0,size/n,8);});}
+    if(offset){context.fillStyle='#222222';displayRows.forEach((r,i)=>{if(rowSet.has(r))context.fillRect(0,offset+i*size/n,8,size/n);});displayCols.forEach((c,j)=>{if(colSet.has(c))context.fillRect(offset+j*size/n,0,size/n,8);});}
     $('matrix-caption').textContent=state.group&&state.planted?'Rows and columns are reordered using the planted membership for this display only. The statistics use the original matrix.':'The same fixed color scale is used for every sample. Hover over a cell to read its value.';
   }
   function statistic(name,value,cutoff){
@@ -60,7 +60,7 @@
     if(!possible){
       $('scan-value').textContent='Not computed';$('scan-decision').textContent='Search too large';
       const logCount=S.logChoose(state.n,state.k),count=logCount<Math.log(1e9)?Math.round(Math.exp(logCount)).toLocaleString():'about 10^'+(logCount/Math.LN10).toFixed(1);
-      $('scan-detail').textContent=count+' row sets. No substitute statistic is used.';
+      $('scan-detail').textContent=count+' row sets to examine.';
       document.querySelector('.statistics').setAttribute('aria-busy','false');updateCombined();return;
     }
     scanPending=true;$('scan-value').textContent='Computing…';$('scan-decision').textContent='Exact row search';$('scan-detail').textContent='The planted location is hidden from this search.';

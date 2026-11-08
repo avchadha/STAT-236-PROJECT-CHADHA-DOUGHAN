@@ -3,85 +3,139 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f7f5f0">
-  <meta name="description" content="A STAT 236 project on detecting and recovering a small elevated block in a noisy Gaussian matrix. Explore one matrix and compare the sum, max, and exact scan.">
-  <title>Sparse submatrix detection · STAT 236</title>
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="A STAT 236 project comparing detection and recovery of a sparse Gaussian submatrix.">
+  <title>Sparse Submatrix Detection · STAT 236</title>
   <link rel="stylesheet" href="assets/site.css">
   <script defer src="assets/statistics.js"></script>
   <script defer src="assets/app.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-svg.js"></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="masthead">
-  <a class="wordmark" href="#">STAT 236 <span>/ Fall 2026</span></a>
-  <nav aria-label="Main navigation"><a href="#explorer">Matrix explorer</a><a href="#methods">Methods</a><a href="#results">Results</a><a href="#report">Report &amp; code</a></nav>
+  <span>STAT 236 · Fall 2026</span>
+  <nav aria-label="Main navigation">
+    <a href="#explorer">Matrix</a>
+    <a href="#methods">Methods</a>
+    <a href="#results">Simulations</a>
+    <a href="#references">References</a>
+  </nav>
 </header>
 <main id="main">
   <section class="intro" aria-labelledby="title">
-    <p class="eyebrow">Amrit Chadha &amp; Faris Doughan</p>
-    <h1 id="title">Finding a small signal<br>in a noisy matrix.</h1>
-    <div class="intro-text"><p>A group of genes may be elevated in only a group of patients. In a matrix of measurements, that pattern appears in a small set of rows and columns. Can we tell that it is there? Can we work out which rows and columns belong to it?</p><p>We study these two questions in a simple Gaussian model, comparing what the methods can detect, what they can recover, and the computation they require.</p></div>
-    <div class="model"><div><span class="model-label">Noise only</span><p>X<sub>ij</sub> ∼ N(0, 1)</p></div><div><span class="model-label">Planted block</span><p>X<sub>ij</sub> ∼ N(μ, 1) for i ∈ S, j ∈ T</p><small>All other entries remain N(0, 1). The k rows and k columns need not be consecutive.</small></div></div>
+    <h1 id="title">Sparse Submatrix Detection</h1>
+    <p class="authors">Amrit Chadha and Faris Doughan</p>
+    <p>Sparse submatrix detection concerns a small, structured signal hidden within a large noisy matrix. In gene expression data, for example, a group of genes may be elevated in a group of samples. We compare methods for detecting that such a group exists and for recovering its rows and columns.</p>
+    <p>We observe an \(n\times n\) matrix with independent entries and test</p>
+    <div class="model">
+      \[
+      \begin{aligned}
+      H_0&amp;\quad X_{ij}\sim N(0,1)\\
+      H_1&amp;\quad X_{ij}\sim N\!\left(\mu\mathbf{1}_{\{i\in S,\,j\in T\}},1\right)
+      \end{aligned}
+      \]
+    </div>
+    <p>Here, \(S\) and \(T\) are unknown sets of \(k\) rows and \(k\) columns, and \(\mu>0\) is the mean shift. The affected rows and columns need not be consecutive.</p>
   </section>
 
   <section id="explorer" class="section" aria-labelledby="explorer-title">
-    <div class="section-heading"><span class="section-number">01</span><div><h2 id="explorer-title">Look at one matrix</h2><p>Change the block size and mean shift, then take another sample. The tests see the matrix, not the planted location.</p></div></div>
-    <noscript><p class="notice">Enable JavaScript to use the matrix explorer. The methods and saved simulation results below remain available.</p></noscript>
+    <h2 id="explorer-title">1. Interactive matrix</h2>
+    <p>Adjust \(n\), \(k\), and \(\mu\), then sample a matrix. The statistics are calculated from the displayed data. Revealing the planted indices changes only the display.</p>
+    <noscript><p>JavaScript is needed for the interactive matrix.</p></noscript>
     <div class="explorer">
       <figure class="matrix-figure">
         <div class="matrix-meta"><span id="matrix-summary">16 × 16 matrix</span><span id="seed-label">Draw 236</span></div>
         <div class="canvas-wrap"><canvas id="matrix" width="640" height="640" role="img" aria-label="A simulated noisy matrix"></canvas><output id="cell-tooltip" hidden></output></div>
         <div class="legend" aria-label="Fixed color scale from minus three to three"><span>−3 or less</span><div></div><span>3 or more</span></div>
-        <figcaption id="matrix-caption">The same fixed color scale is used for every sample. Hover over a cell to read its value.</figcaption>
+        <figcaption id="matrix-caption">The color scale is fixed. Hover over a cell to read its value.</figcaption>
       </figure>
       <div class="controls-panel">
         <form id="controls" aria-label="Matrix parameters">
-          <div class="parameter-row"><label for="dimension">Matrix size <span>n</span></label><select id="dimension"><option value="16">16 × 16</option><option value="32">32 × 32</option><option value="64">64 × 64</option><option value="128">128 × 128</option><option value="512">512 × 512</option></select></div>
-          <div class="parameter"><div class="parameter-row"><label for="block-size">Block size <span>k</span></label><input id="block-number" type="number" min="1" max="8" value="3" aria-label="Block size number"></div><input id="block-size" type="range" min="1" max="8" step="1" value="3"><div class="presets" aria-label="Block size presets"><button type="button" data-gamma=".4">Small</button><button type="button" data-gamma=".6">Medium</button><button type="button" data-gamma=".75">Large</button></div><p id="regime" class="hint">k &lt; √n</p></div>
-          <div class="parameter"><div class="parameter-row"><label for="strength">Mean shift <span>μ</span></label><input id="strength-number" type="number" min="0" max="15" step=".01" value="1.73" aria-label="Mean shift number"></div><input id="strength" type="range" min="0" max="15" step=".01" value="1.73"></div>
+          <div class="parameter-row"><label for="dimension">Matrix size \(n\)</label><select id="dimension"><option value="16">16 × 16</option><option value="32">32 × 32</option><option value="64">64 × 64</option><option value="128">128 × 128</option><option value="512">512 × 512</option></select></div>
+          <div class="parameter">
+            <div class="parameter-row"><label for="block-size">Block size \(k\)</label><input id="block-number" type="number" min="1" max="8" value="3" aria-label="Block size number"></div>
+            <input id="block-size" type="range" min="1" max="8" step="1" value="3">
+            <div class="presets" aria-label="Block size presets"><button type="button" data-gamma=".4">Small</button><button type="button" data-gamma=".6">Medium</button><button type="button" data-gamma=".75">Large</button></div>
+            <p id="regime" class="hint">Small block</p>
+          </div>
+          <div class="parameter"><div class="parameter-row"><label for="strength">Mean shift \(\mu\)</label><input id="strength-number" type="number" min="0" max="15" step=".01" value="1.73" aria-label="Mean shift number"></div><input id="strength" type="range" min="0" max="15" step=".01" value="1.73"></div>
           <label class="check"><input id="planted" type="checkbox" checked> Plant a signal</label>
-          <div class="sampling"><button id="sample" class="primary" type="button">Sample another matrix <span aria-hidden="true">↻</span></button><button id="reset" type="button" class="text-button">Reset</button></div>
-          <p class="hint">Changing μ keeps the noise fixed. Sampling gives a fresh draw.</p>
-          <div class="reveal-controls"><label class="check"><input id="reveal" type="checkbox"> Show planted rows and columns</label><label class="check"><input id="group" type="checkbox"> Group planted rows and columns</label><p class="hint">These reveal controls only change the display. They do not change the test statistics.</p></div>
+          <div class="sampling"><button id="sample" class="primary" type="button">Sample matrix</button><button id="reset" type="button" class="text-button">Reset</button></div>
+          <p class="hint">Changing \(\mu\) keeps the noise fixed. Sampling gives a fresh draw.</p>
+          <div class="reveal-controls"><label class="check"><input id="reveal" type="checkbox"> Show planted rows and columns</label><label class="check"><input id="group" type="checkbox"> Group planted rows and columns</label></div>
         </form>
         <div class="statistics" aria-label="Statistics for the current sample" aria-live="polite" aria-busy="false">
-          <div class="stat-heading"><span>Test statistic</span><span>Level .05</span></div>
-          <div class="stat"><div><h3>Sum <span>∑X<sub>ij</sub> / n</span></h3><p id="sum-detail">Exact Gaussian cutoff</p></div><div class="stat-result"><strong id="sum-value">—</strong><span id="sum-decision">—</span></div></div>
-          <div class="stat"><div><h3>Max <span>max X<sub>ij</sub></span></h3><p id="max-detail">Exact Gaussian cutoff</p></div><div class="stat-result"><strong id="max-value">—</strong><span id="max-decision">—</span></div></div>
-          <div class="stat"><div><h3>Scan <span>max block sum / k</span></h3><p id="scan-detail">Exact search when manageable</p></div><div class="stat-result"><strong id="scan-value">—</strong><span id="scan-decision">—</span></div></div>
-          <div class="combined"><span>Sum or scan <small>Level .025 for each component</small></span><strong id="combined-decision">—</strong></div>
+          <div class="stat-heading"><span>Statistic</span><span>Level \(.05\)</span></div>
+          <div class="stat"><div><h3>Sum <span>\(\frac{1}{n}\sum_{i,j}X_{ij}\)</span></h3><p id="sum-detail">Exact Gaussian cutoff</p></div><div class="stat-result"><strong id="sum-value">—</strong><span id="sum-decision">—</span></div></div>
+          <div class="stat"><div><h3>Max <span>\(\max_{i,j}X_{ij}\)</span></h3><p id="max-detail">Exact Gaussian cutoff</p></div><div class="stat-result"><strong id="max-value">—</strong><span id="max-decision">—</span></div></div>
+          <div class="stat"><div><h3>Scan <span>\(\max_{|A|=|B|=k}\frac{1}{k}\sum_{i\in A,j\in B}X_{ij}\)</span></h3><p id="scan-detail">Exact search when manageable</p></div><div class="stat-result"><strong id="scan-value">—</strong><span id="scan-decision">—</span></div></div>
+          <div class="combined"><span>Sum or scan <small>Level \(.025\) per component</small></span><strong id="combined-decision">—</strong></div>
         </div>
       </div>
     </div>
-    <p class="explorer-note" id="sample-note">This is one observation, not an estimate of power. Sum and max use their exact null cutoffs. The scan uses a conservative union-bound cutoff here, while the report calibrates it on separate noise matrices. No repeated simulation is run in the browser.</p>
+    <p class="explorer-note">A single sample does not estimate power. Sum and max use exact null cutoffs. The scan uses the conservative cutoff \(\sqrt{2\log(M/.05)}\), where \(M=\binom{n}{k}^{2}\). Exact scans are skipped when the search is too large. The experiment below instead calibrates the scan on independent noise matrices.</p>
   </section>
 
   <section id="methods" class="section" aria-labelledby="methods-title">
-    <div class="section-heading"><span class="section-number">02</span><div><h2 id="methods-title">Three ways to detect a block</h2><p>Each method collects evidence differently. The asymptotic statements below assume k grows with n while k/n tends to zero.</p></div></div>
-    <div class="method-table-wrap"><table class="method-table"><thead><tr><th scope="col">Method</th><th scope="col">What it uses</th><th scope="col">What the theory tells us</th><th scope="col">Computation</th></tr></thead><tbody>
-    <tr><th scope="row">Sum</th><td>All entries, including those outside the block.</td><td>Reliable when μk²/n → ∞. A large block can supply enough total signal even when each shift is weak.</td><td>O(n²)</td></tr>
-    <tr><th scope="row">Scan</th><td>The largest sum over candidate k × k blocks.</td><td>Reliable when lim inf μ²k / [4 log(n/k)] &gt; 1. It avoids much unaffected noise but pays for searching over locations.</td><td>Combinatorial search</td></tr>
-    <tr><th scope="row">Max</th><td>One unusually large entry, as in a minimum-p test.</td><td>Ma and Wu give the sufficient condition lim inf μ / [2√log n] &gt; 1. This bound is not a complete description of its power for every k.</td><td>O(n²)</td></tr>
-    </tbody></table></div>
-    <div class="method-notes"><p><strong>Combining the sum and scan</strong> lets a test succeed under either of their conditions. Splitting the significance level between them controls false positives.</p><p>For k ≈ n<sup>γ</sup>, the sum attains the detection rate when γ &gt; 2/3, while scanning helps at weaker signals when γ &lt; 2/3. These are asymptotic comparisons. They do not give an exact finite-sample ranking.</p></div>
-
-    <div class="recovery-intro"><p class="eyebrow">A different goal</p><h2>Detection does not give the location.</h2><p>A recovery method must return the correct row and column sets. One wrong index counts as an error.</p></div>
-    <div class="recovery-methods"><article><h3>Keep the maximizing block</h3><p>The scan can return its maximizing indices as well as its statistic. Butucea, Ingster and Suslina establish a sharp boundary for exact recovery. The true block must beat every competing block, including ones differing by just one row or column.</p></article><article><h3>Estimate the signal directions</h3><p>The mean matrix has rank one. Cai, Liang and Rakhlin use leading singular vectors to form row and column scores. For smaller blocks, soft-thresholding the entries first can help suppress noise. These methods avoid enumeration.</p><p class="hint">Our experiments supply k and retain the k largest scores. The paper also studies selecting the groups without knowing k.</p></article></div>
+    <h2 id="methods-title">2. Detection and recovery</h2>
+    <p>The sum collects the mean shifts across the whole matrix, while the scan searches for a block with a large sum. The max looks for an unusually large individual entry, as in a minimum-\(p\) test. Their asymptotic guarantees assume \(k\to\infty\) and \(k=o(n)\).</p>
+    <div class="method-table-wrap">
+      <table class="method-table">
+        <thead><tr><th scope="col">Test</th><th scope="col">Sufficient for reliable detection</th><th scope="col">Computation</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Sum</th><td>\(\mu k^2/n\to\infty\)</td><td>\(O(n^2)\)</td></tr>
+          <tr><th scope="row">Scan</th><td>\(\displaystyle\liminf_{n\to\infty}\frac{\mu^2k}{4\log(n/k)}>1\)</td><td>Search over candidate blocks</td></tr>
+          <tr><th scope="row">Max</th><td>\(\displaystyle\liminf_{n\to\infty}\frac{\mu}{2\sqrt{\log n}}>1\)</td><td>\(O(n^2)\)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The sum and scan conditions come from Butucea and Ingster, while the max condition is a sufficient bound given by Ma and Wu. It does not describe the max's power for every block size. Combining the sum and scan allows detection under either condition.</p>
+    <p>For \(k\approx n^\gamma\), the sum attains the detection rate when \(\gamma>2/3\), since a large block supplies enough total signal without searching for its location. When \(\gamma<2/3\), the scan can detect weaker signals by excluding much of the unaffected noise. These comparisons concern rates as \(n\) grows, rather than the power ordering at a fixed matrix size.</p>
+    <h3 class="subheading">Exact recovery</h3>
+    <p>Recovery requires the correct row and column sets. Even one incorrect index counts as an error. The maximizing block from the scan provides an exhaustive recovery estimator, studied by Butucea, Ingster and Suslina. It must beat every incorrect candidate, including blocks differing by just one row or column.</p>
+    <p>Spectral recovery avoids this enumeration. The mean matrix \(\mu\mathbf{1}_S\mathbf{1}_T^{\mathsf T}\) has rank one, so Cai, Liang and Rakhlin use leading singular vectors to form row and column scores. Soft-thresholding entries first can help for smaller blocks. Our experiments give these methods \(k\) and select the \(k\) largest scores.</p>
   </section>
 
   <section id="results" class="section" aria-labelledby="results-title">
-    <div class="section-heading"><span class="section-number">03</span><div><h2 id="results-title">What we observed</h2><p>Two experiments from our current notebook. Each point uses 300 trials, and methods within a condition see the same matrices.</p></div></div>
-    <article class="study"><div class="study-heading"><h3>Detection as the mean shift increases</h3><p>Higher power is better.</p></div><a href="figures/detection_power.png" target="_blank" rel="noopener" class="figure-link" aria-label="Open the detection figure at full size"><img src="figures/detection_power.png" width="1189" height="590" loading="lazy" alt="Six detection-power panels comparing sum, scan, max and sum-or-scan at n=16 and sum versus max at n=512."></a><p class="figure-caption">Top row n = 16 with k = 3, 5, 8. Bottom row n = 512 with k = 12, 42, 107. The dashed curve gives the sum's exact Gaussian power. The horizontal ranges differ between panels.</p><div class="finding"><span>What matters</span><p>At n = 16, k = 3 and μ ≈ 1.73, the scan has power .72 versus .21 for the sum. At n = 512, k = 107 and μ ≈ .13, the sum reaches .90 while the max stays near .05. A few strong shifts and many weak shifts favor different procedures.</p></div></article>
-    <article class="study"><div class="study-heading"><h3>Recovering every row and column</h3><p>Lower error is better.</p></div><a href="figures/recovery_error.png" target="_blank" rel="noopener" class="figure-link" aria-label="Open the recovery figure at full size"><img src="figures/recovery_error.png" width="1189" height="590" loading="lazy" alt="Six exact-recovery-error panels showing exhaustive and spectral methods at n=16 and spectral methods at n=512, with soft thresholding for small blocks."></a><p class="figure-caption">The dashed lines mark the asymptotic recovery reference from the report. They are not predicted finite-sample cutoffs for spectral recovery. Soft thresholding uses t = √log(n/k²) when k² &lt; n.</p><div class="finding"><span>What matters</span><p>At n = 16, k = 3 and μ ≈ 2.16, the scan detects the signal in 97% of runs, but exhaustive recovery makes an error in 20% and spectral recovery in 51%. At n = 512, k = 12 and μ ≈ 2.08, soft thresholding reduces recovery error from .99 to .22.</p></div></article>
-    <aside class="limits"><h3>How far these comparisons go</h3><p>We compute exact scans only at n = 16. The larger matrices compare the efficient methods. All recovery methods receive the true block size, and small differences may reflect sampling variation. The simulations illustrate finite-sample behavior; the asymptotic guarantees and conditional computational limits come from the papers.</p></aside>
+    <h2 id="results-title">3. Simulation results</h2>
+    <p>We use \(300\) trials per condition. Within each condition, the methods see the same matrices. We run exact scans only at \(n=16\) and compare the efficient methods at \(n=512\).</p>
+    <article class="study">
+      <h3>Detection</h3>
+      <a href="figures/detection_power.png" target="_blank" rel="noopener" class="figure-link" aria-label="Open the detection figure at full size"><img src="figures/detection_power.png" width="1189" height="590" loading="lazy" alt="Six detection-power panels comparing sum, scan, max and sum-or-scan at n=16 and sum versus max at n=512."></a>
+      <p class="figure-caption">Figure 1. Detection power as \(\mu\) increases. The top row uses \(n=16\) and \(k=3,5,8\). The bottom row uses \(n=512\) and \(k=12,42,107\). The horizontal ranges differ between panels.</p>
+      <p>The dashed curve gives the sum's exact Gaussian power, \(1-\Phi(z_{.95}-\mu k^2/n)\), where \(z_{.95}=\Phi^{-1}(.95)\). Each test uses level \(.05\), with \(.025\) per component for the combined test. The scan cutoff uses \(1{,}500\) separate noise matrices.</p>
+      <p>At \(n=16\), \(k=3\), and \(\mu\approx1.73\), the scan has power \(.72\) versus \(.21\) for the sum. At \(n=512\), \(k=107\), and \(\mu\approx.13\), the sum reaches \(.90\) while the max stays near \(.05\). The first example favors concentrating on a small block. In the second, the sum detects many weak shifts without any one entry standing out.</p>
+    </article>
+    <article class="study">
+      <h3>Recovery</h3>
+      <a href="figures/recovery_error.png" target="_blank" rel="noopener" class="figure-link" aria-label="Open the recovery figure at full size"><img src="figures/recovery_error.png" width="1189" height="590" loading="lazy" alt="Six exact-recovery-error panels showing exhaustive and spectral methods at n=16 and spectral methods at n=512, with soft thresholding for small blocks."></a>
+      <p class="figure-caption">Figure 2. Probability of at least one incorrect row or column. Lower error is better. All recovery methods are given \(k\).</p>
+      <p>The dashed lines mark the asymptotic recovery reference from Butucea, Ingster and Suslina, specialized to square blocks</p>
+      <div class="equation">
+        \[
+        \max\left\{
+          \frac{\sqrt{2\log k}+\sqrt{2\log(n-k)}}{\sqrt k},\,
+          2\sqrt{\frac{\log(n/k)}{k}}
+        \right\}
+        \]
+      </div>
+      <p>This reference does not predict an exact finite-sample cutoff for spectral recovery. Soft thresholding uses \(t=\sqrt{\log(n/k^2)}\) when \(k^2&lt;n\).</p>
+      <p>At \(n=16\), \(k=3\), and \(\mu\approx2.16\), the scan detects the signal in \(97\%\) of runs, but exhaustive recovery makes an error in \(20\%\) and spectral recovery in \(51\%\). At \(n=512\), \(k=12\), and \(\mu\approx2.08\), soft thresholding reduces recovery error from \(.99\) to \(.22\).</p>
+    </article>
+    <p>These experiments illustrate finite-sample behavior. Exact scanning is restricted to small matrices, and differences of a few percentage points may reflect sampling variation. The asymptotic results come from the papers below.</p>
   </section>
 
-  <section id="report" class="section resources" aria-labelledby="report-title">
-    <div class="section-heading"><span class="section-number">04</span><div><h2 id="report-title">Report, code, and sources</h2><p>The report gives the assumptions, square-case results, calculations, and discussion. The notebook contains the two experiments and their settings.</p></div></div>
-    <div class="resource-links"><a href="STAT236_Project_With_Simulations.pdf">Read the report <span>PDF ↗</span></a><a href="https://colab.research.google.com/github/avchadha/STAT-236-PROJECT-CHADHA-DOUGHAN/blob/main/notebooks/STAT236_Sparse_Submatrix_Experiments.ipynb" target="_blank" rel="noopener">Open the notebook <span>Colab ↗</span></a><a href="https://github.com/avchadha/STAT-236-PROJECT-CHADHA-DOUGHAN">View the repository <span>GitHub ↗</span></a></div>
-    <ol class="references"><li><a href="https://doi.org/10.3150/12-BEJ470">Butucea and Ingster (2013)</a><span>Detection of a sparse submatrix of a high-dimensional noisy matrix.</span></li><li><a href="https://doi.org/10.1214/14-AOS1300">Ma and Wu (2015)</a><span>Computational barriers in minimax submatrix detection.</span></li><li><a href="https://doi.org/10.1051/ps/2014017">Butucea, Ingster and Suslina (2015)</a><span>Sharp variable selection of a sparse submatrix in a high-dimensional noisy matrix.</span></li><li><a href="https://doi.org/10.1214/16-AOS1488">Cai, Liang and Rakhlin (2017)</a><span>Computational and statistical boundaries for submatrix localization in a large noisy matrix.</span></li></ol>
+  <section id="references" class="section" aria-labelledby="references-title">
+    <h2 id="references-title">References</h2>
+    <ol class="references">
+      <li>Butucea, C., and Ingster, Y. I. (2013). <a href="https://doi.org/10.3150/12-BEJ470">Detection of a sparse submatrix of a high-dimensional noisy matrix.</a> <em>Bernoulli</em>, 19(5B), 2652–2688.</li>
+      <li>Ma, Z., and Wu, Y. (2015). <a href="https://doi.org/10.1214/14-AOS1300">Computational barriers in minimax submatrix detection.</a> <em>The Annals of Statistics</em>, 43(3), 1089–1116.</li>
+      <li>Butucea, C., Ingster, Y. I., and Suslina, I. A. (2015). <a href="https://doi.org/10.1051/ps/2014017">Sharp variable selection of a sparse submatrix in a high-dimensional noisy matrix.</a> <em>ESAIM Probability and Statistics</em>, 19, 115–134.</li>
+      <li>Cai, T. T., Liang, T., and Rakhlin, A. (2017). <a href="https://doi.org/10.1214/16-AOS1488">Computational and statistical boundaries for submatrix localization in a large noisy matrix.</a> <em>The Annals of Statistics</em>, 45(4), 1403–1430.</li>
+    </ol>
   </section>
 </main>
-<footer><span>Amrit Chadha &amp; Faris Doughan · STAT 236 · Fall 2026</span><a href="#">Back to top ↑</a></footer>
+<footer>Amrit Chadha and Faris Doughan · STAT 236 · Fall 2026</footer>
 </body>
 </html>
