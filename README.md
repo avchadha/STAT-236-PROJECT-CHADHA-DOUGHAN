@@ -66,12 +66,33 @@ Butucea & Ingster (2013); Ma & Wu (2015); Butucea, Ingster & Suslina (2015); Cai
 ## GitHub raw trial data
 
 GitHub stores the raw trial records in `results/trial_parts/trials_01.csv`, etc., each with the same header. These partitions concatenate row-for-row to the raw `results/trials.csv` in the downloadable archive. To reconstruct the single CSV from a GitHub checkout, run `python experiments/restore_trials.py`. The replayed results can then be regenerated with `experiments/run_experiments.py` and compared with `results/summary.csv`.
-## Colab notebook: matrix-size and sparsity-exponent experiments
+## Standalone experiment notebook
 
-[Open the configurable STAT 236 experiment notebook in Google Colab](https://colab.research.google.com/github/avchadha/STAT-236-PROJECT-CHADHA-DOUGHAN/blob/main/notebooks/STAT236_Sparse_Submatrix_Experiments.ipynb).
+[Open in Colab](https://colab.research.google.com/github/avchadha/STAT-236-PROJECT-CHADHA-DOUGHAN/blob/main/notebooks/STAT236_Sparse_Submatrix_Experiments.ipynb) or open the [executed notebook](notebooks/STAT236_Sparse_Submatrix_Experiments.ipynb). The [HTML reading copy](notebooks/STAT236_Sparse_Submatrix_Experiments.html) keeps all results visible and hides setup and plotting code. No experiment modes need selecting.
 
-The notebook contains the original simulation methods and correctness checks, loads all **50,400 archived paper trials** from the ten GitHub CSV partitions, and adds experiments over matrix size `n`, sparsity exponent `gamma` (with `k=floor(n**gamma)`, clipped for small matrices), and signal strength `mu`. It produces detection power, Type I error, exact recovery, runtime figures, confidence intervals, calibration cutoffs, and per-trial CSV exports. It compares requested gamma with the **effective** exponent after integer rounding and deduplicates repeated (n,k) pairs. Exact scan is only enabled for small enough combinatorial searches.
+The notebook embeds the statistical implementation and runs three fixed studies from top to bottom:
 
-The [single official notebook](notebooks/STAT236_Sparse_Submatrix_Experiments.ipynb) includes executed plots and tables and remains fully rerunnable. The [new sweep summary](results/gamma_sweep/summary.csv), [calibration cutoffs](results/gamma_sweep/calibration.csv), [gamma mapping](results/gamma_sweep/gamma_mapping.csv), and [metadata](results/gamma_sweep/metadata.json) are committed. The new exploratory run comprised **31 distinct configurations** and **93,000 trials**, with 600 independent calibration nulls per configuration and 200 fresh null / 200 planted evaluations per signal level, plus 200 recovery evaluations per signal level. It is a separate exploratory study, **not a replacement for the fixed paper run**. A complete archive containing the newly generated raw trial rows and graphics is also available as a download in the corresponding ChatGPT conversation; the notebook regenerates them with a fixed seed and supports per-configuration checkpoints.
+| Study | Design | Recorded evaluation trials |
+|---|---|---:|
+| Broad sweep | Original seven matrix sizes, five requested sparsity exponents, five scan-scaled signals; 31 distinct `(n,k)` pairs | 93,000 |
+| Signal thresholds | `(12,2)`, `(12,5)`, `(64,4)`, `(64,16)`; half, once, and twice every applicable sum, scan, max, exact-recovery, spectral, and thresholded-spectral reference scale, plus zero signal | 42,000 |
+| Power laws | `n = 12,24,64`; requested `gamma = .4,.5,2/3,.8`; a beta grid including both exponent boundaries and nearby values; detection only | 57,600 |
 
-Google Colab's default filesystem is ephemeral. To resume a multi-session study, copy its outputs to persistent Google Drive storage or set the notebook's output directory to a mounted Drive folder before running.
+Each pair uses 600 independent calibration matrices and 200 evaluations per signal and condition. Studies 1–2 also run 200 recovery trials per signal. All signals run automatically. The 50,400 original paper trials are loaded and checked separately. These new studies do not replace the paper's 1,500/600 calibration/evaluation design.
+
+The notebook reports actual block sizes and effective exponents after rounding, both detection and recovery regimes, and exact-scan eligibility. Every expected method/signal combination and reported success count is checked against raw trials. Missing exact scans are marked as uncomputed. Theoretical rejection thresholds are evaluated separately from the calibrated 5% tests. Finite simulations cannot verify the writeup's asymptotic impossibility results or computational hardness hypotheses; the notebook's coverage table identifies these limits.
+
+To rebuild and execute locally:
+
+```bash
+python -m pip install -r requirements-notebook.txt
+python tests/test_statistics.py
+python experiments/build_notebook.py
+python tests/test_notebook_studies.py
+python experiments/execute_notebook.py
+python experiments/export_notebook.py
+```
+
+`build_notebook.py` copies the reviewed statistical function definitions directly from `run_experiments.py`; tests check their syntax trees for equality. The notebook itself needs no custom project imports. Its archived paper downloads are pinned to commit `f87e43d` and use local CSVs when available.
+
+Each study saves its complete design, calibration, summaries, configuration table, and raw trials in `outputs_notebook/`. Matching completed configurations are verified and reused on rerun. The final cell produces `STAT236_notebook_results.zip`. Colab storage is temporary: download the ZIP to retain the run. Compact results for the added studies are saved in `results/notebook_studies/`; the original `results/gamma_sweep/` remains the archived broad study.
