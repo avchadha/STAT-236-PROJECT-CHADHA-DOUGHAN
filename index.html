@@ -26,8 +26,8 @@
   <section class="intro" aria-labelledby="title">
     <h1 id="title">Sparse Submatrix Detection</h1>
     <p class="authors">Amrit Chadha and Faris Doughan</p>
-    <p>Imagine a table with genes as rows and tissue samples as columns. A few genes might be more active in just some samples, but the measurements are noisy. Can we tell whether that shared pattern is real, and which genes and samples belong to it?</p>
-    <p>We study a simplified version of this problem: a hidden group of entries in a noisy matrix has a higher average value. We compare four detection methods on the same simulated matrices, varying the size of the hidden group and the strength of its signal. We then ask the harder question of identifying its rows and columns exactly.</p>
+    <p>In gene expression data, each row can represent a gene and each column a tissue sample. A group of genes may be more active in some samples than in others, but noise in the measurements can make this pattern difficult to identify. Sparse submatrix detection asks whether there is enough evidence to distinguish such a group from random variation.</p>
+    <p>We examine this question in a simpler setting, where a selected group of matrix entries has a higher mean than the rest. By applying four detection methods to the same simulated matrices, we compare how their performance depends on the size of this group and the strength of the mean shift. We also study recovery, which requires identifying the affected rows and columns exactly.</p>
     <p>We observe an \(n\times n\) matrix with independent entries and test</p>
     <div class="model">
       \[
@@ -42,9 +42,9 @@
 
   <section id="explorer" class="section" aria-labelledby="explorer-title">
     <h2 id="explorer-title">1. Interactive matrix</h2>
-    <p>Noise alone can produce bright red entries, so a few large values do not establish that a signal is present. A planted block adds a small upward shift to a chosen group of entries; it does not make every affected entry large. The methods below try to distinguish that shared shift from chance.</p>
-    <p>The controls set the matrix size \(n\), the number of affected rows and columns \(k\), and the mean shift \(\mu\). Larger \(\mu\) makes each affected entry stronger; larger \(k\) spreads the signal across more entries. The affected rows and columns need not sit next to each other.</p>
-    <p class="try-it"><strong>Try this:</strong> turn off the planted block and choose <em>New sample</em> to see what noise looks like. Turn it back on and increase \(\mu\). Compare the test decisions before revealing the location. Can a test find evidence of a signal before the pattern is obvious to you?</p>
+    <p>Even a matrix containing only noise will have some unusually large entries. A few red cells are therefore not enough to conclude that a signal is present. In our model, a signal raises the mean of the affected entries, though individual values may still be small or negative. The detection methods assess whether this group of entries provides evidence beyond what noise alone would produce.</p>
+    <p>The controls allow us to vary the matrix size \(n\), block size \(k\), and mean shift \(\mu\). Increasing \(\mu\) raises the mean of each affected entry, while increasing \(k\) increases the number of entries carrying the signal. Although we call this group a block, its rows and columns need not be consecutive.</p>
+    <p class="try-it"><strong>Using the example:</strong> turn off the planted block and select <em>New sample</em> to see the patterns that noise alone can produce. Then restore the block and increase \(\mu\), keeping its location hidden until you have compared the test decisions with your own impression of the matrix.</p>
     <noscript><p>JavaScript is needed for the interactive matrix.</p></noscript>
     <div class="explorer">
       <figure class="matrix-figure">
@@ -95,39 +95,39 @@
       <div class="combined"><span>Sum or scan <small>Level \(.025\) for each component</small></span><strong id="combined-decision">—</strong></div>
       <p id="scan-status" class="hint">The scan is computed exactly when the matrix is small enough.</p>
     </div>
-    <p class="explorer-note"><strong>Reading the decisions:</strong> each method turns this same matrix into a number and compares it with its own cutoff. “Reject” means evidence against noise alone; “Do not reject” means insufficient evidence, not proof that no block exists. A single sample can mislead, so section 3 compares performance over repeated draws.</p>
+    <p class="explorer-note"><strong>Interpreting the decisions:</strong> each test compares a different summary of the same matrix with a cutoff. A “Reject” decision indicates evidence against the model containing only noise; “Do not reject” means the evidence was insufficient. Since either decision can be wrong on an individual draw, section 3 evaluates the methods over many independently generated matrices.</p>
     <p class="explorer-note">The sum and max use exact null cutoffs. Here the scan uses the conservative cutoff \(\sqrt{2\log(M/.05)}\), where \(M=\binom{n}{k}^{2}\). The simulations below use a calibrated scan cutoff and estimate power over repeated draws.</p>
   </section>
 
   <section id="methods" class="section" aria-labelledby="methods-title">
     <h2 id="methods-title">2. Detection and recovery</h2>
-    <p><strong>Detection asks “Is a signal present?” Recovery asks “Where is it?”</strong> First we compare four ways to detect an elevated group of entries. Each method looks at the same matrix but combines its entries differently: many weak shifts may be easier to find by adding them together than by looking for one extreme value.</p>
-    <h3>How the detectors read a matrix</h3>
-    <p class="diagram-note">The first three diagrams use the same illustrative \(5\times5\) matrix, with \(k=2\). Shading marks the entries used in the calculation. Each statistic has its own cutoff, so the numbers cannot be compared directly.</p>
+    <p><strong>Detection concerns the presence of a signal, while recovery concerns its location.</strong> The four detectors differ in how they use the same observations. Adding many weak shifts may reveal a pattern that would be missed by a test based on the largest entry alone.</p>
+    <h3>How the detection methods work</h3>
+    <p class="diagram-note">The first three diagrams apply the tests to the same \(5\times5\) example with \(k=2\). The shaded cells show which entries contribute to each statistic. These statistics use different cutoffs, so their sizes alone do not determine which test rejects.</p>
     <div class="test-diagrams">
       <figure>
-        <h4>Sum: add everything</h4>
-        <img src="figures/method-sum.svg" width="320" height="160" alt="All 25 entries are added. Their total is 10; dividing by n equals 5 gives a sum statistic of 2.">
-        <figcaption>Add all entries and divide by \(n\). This can accumulate many weak signals, but also includes noise from every unaffected entry.</figcaption>
+        <h4>Sum test</h4>
+        <img src="figures/method-sum.svg" width="320" height="160" alt="Sum calculation: all 25 entries total 10. With n = 5, the statistic is 10 / 5 = 2.">
+        <figcaption>Adding all entries and dividing by \(n\) allows the sum test to accumulate many small shifts. Its performance also depends on how much noise comes from the unaffected entries.</figcaption>
       </figure>
       <figure>
-        <h4>Scan: search for a strong group</h4>
-        <img src="figures/method-scan.svg" width="320" height="160" alt="The best two-row, two-column selection uses rows 2 and 4 and columns 2 and 4. Its four entries total 10; dividing by k equals 2 gives 5.">
-        <figcaption>Try every set of \(k\) rows and \(k\) columns. Keep the largest block sum, divided by \(k\). Searching helps isolate a small signal, but takes more computation.</figcaption>
+        <h4>Scan test</h4>
+        <img src="figures/method-scan.svg" width="320" height="160" alt="Scan calculation: rows 2 and 4 and columns 2 and 4 give the largest block sum, 10. With k = 2, the statistic is 5.">
+        <figcaption>The scan compares every choice of \(k\) rows and \(k\) columns, taking the largest sum divided by \(k\). This search can exclude much of the unaffected noise, though it is more expensive to compute.</figcaption>
       </figure>
       <figure>
-        <h4>Max: keep the largest entry</h4>
-        <img src="figures/method-max.svg" width="320" height="160" alt="Only the largest entries, both equal to 3, are highlighted. The maximum statistic is 3.">
-        <figcaption>Keep just the largest value. This is a simple way to find a strong individual entry, but can miss a block of moderate values.</figcaption>
+        <h4>Maximum test</h4>
+        <img src="figures/method-max.svg" width="320" height="160" alt="Maximum calculation: the largest entry is 3, which occurs twice.">
+        <figcaption>The maximum test uses only the largest entry. It can detect a sufficiently strong individual value, but may overlook a block whose entries are only moderately elevated.</figcaption>
       </figure>
       <figure>
-        <h4>Sum or scan: use either clue</h4>
-        <img src="figures/method-combined.svg" width="320" height="160" alt="The sum and scan each compare their statistic with a level .025 cutoff. An OR joins their decisions: reject if either rejects.">
-        <figcaption>Reject if either sum or scan rejects. Giving each component level .025 keeps the overall false-positive probability at most .05.</figcaption>
+        <h4>Combined sum and scan</h4>
+        <img src="figures/method-combined.svg" width="320" height="160" alt="Combined decision: compare sum and scan against separate level .025 cutoffs, and reject if either test rejects.">
+        <figcaption>The combined test rejects when either the sum or the scan rejects. Each component uses level .025, so the probability of a false positive for the combined test is at most .05.</figcaption>
       </figure>
     </div>
-    <h3>When should each method work?</h3>
-    <p>A test needs enough signal to overcome random noise. The conditions below describe how signal strength and block size must scale as the matrix grows, assuming \(k\to\infty\) and \(k=o(n)\). They are not exact cutoffs for a particular small matrix.</p>
+    <h3>Signal strength and reliable detection</h3>
+    <p>The conditions below describe how strong a signal must be, relative to the block size, for detection to become reliable as \(n\) grows. They assume \(k\to\infty\) and \(k=o(n)\), so they should not be interpreted as exact cutoffs for the finite matrices in the example.</p>
     <div class="method-table-wrap">
       <table class="method-table">
         <thead><tr><th scope="col">Test and statistic</th><th scope="col">Sufficient for reliable detection</th><th scope="col">Complexity</th></tr></thead>
@@ -142,7 +142,7 @@
     <p>Butucea and Ingster give the sum and scan conditions. The max condition is a sufficient bound from Ma and Wu, rather than a complete description of its power for every block size. Combining the sum and scan allows detection under either condition.</p>
     <p>For \(k\approx n^\gamma\), the sum attains the detection rate when \(\gamma>2/3\), since a large block supplies enough total signal without searching for its location. When \(\gamma<2/3\), the scan can detect weaker signals by excluding much of the unaffected noise. These comparisons concern rates as \(n\) grows, rather than the power ordering at a fixed matrix size.</p>
     <h3 class="subheading">Exact recovery</h3>
-    <p>A detector can say that some signal is present without knowing all its locations. Recovery must name the affected rows and columns; even one incorrect index counts as an error. Exhaustive recovery keeps the row and column sets of the winning scan block. The true block must beat every incorrect candidate, including those differing by just one row or column, as studied by Butucea, Ingster and Suslina.</p>
+    <p>A successful detector need not know which rows and columns carry the signal. Exact recovery requires all of these indices to be correct, with even one mistake counted as an error. In the exhaustive approach studied by Butucea, Ingster and Suslina, we retain the block with the largest sum. The true block must therefore beat every alternative, including candidates that differ by only one row or column.</p>
     <p>Spectral recovery uses singular vectors instead of enumerating blocks. The mean matrix \(\mu\mathbf{1}_S\mathbf{1}_T^{\mathsf T}\) has rank one, so Cai, Liang and Rakhlin use leading singular vectors to form row and column scores. Soft-thresholding entries first can help for smaller blocks. Our experiments give these methods \(k\) and select the \(k\) largest scores.</p>
     <ol class="recovery-flow" aria-label="Steps in spectral recovery">
       <li>Start with the matrix</li>
@@ -150,7 +150,7 @@
       <li>Score each row and column</li>
       <li>Keep the top \(k\) of each</li>
     </ol>
-    <p class="diagram-note">The singular vectors estimate a shared row-and-column pattern. Soft-thresholded spectral recovery first shrinks each entry toward zero, then follows the same steps.</p>
+    <p class="diagram-note">The leading singular vectors describe an estimated pattern across rows and columns. For the soft-thresholded version, we first shrink the matrix entries toward zero and then carry out the same steps.</p>
     <h3 class="subheading" id="boundaries">Statistical and computational boundaries</h3>
     <p>These diagrams compare the signal needed for detection and recovery. Write \(k\asymp n^\gamma\) and \(\mu\asymp n^{-\beta}\). Moving right increases the block size, while moving up weakens the signal. The diagrams compare exponents and omit logarithmic factors.</p>
     <div class="boundary-figures">
