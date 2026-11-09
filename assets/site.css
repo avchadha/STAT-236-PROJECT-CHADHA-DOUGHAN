@@ -147,6 +147,16 @@ button:hover { background: #f2f2f2; }
 .table-note { font-size: 14px; color: var(--muted); margin-top: -8px; }
 .method-table td:last-child { font-size: 15px; }
 .subheading { margin-top: 24px; }
+.try-it { border-left: 2px solid var(--line); padding-left: 16px; }
+.diagram-note { font-size: 15px; color: var(--muted); }
+.test-diagrams { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 36px; margin: 22px 0 28px; }
+.test-diagrams figure { min-width: 0; margin: 0; padding-top: 14px; border-top: 1px solid var(--line); }
+.test-diagrams h4 { font-size: 18px; margin: 0 0 12px; }
+.test-diagrams img { display: block; width: 100%; max-width: 320px; height: auto; margin: 0 auto 12px; }
+.test-diagrams figcaption { font-size: 16px; line-height: 1.5; }
+.recovery-flow { display: flex; flex-wrap: wrap; gap: 10px 0; margin: 20px 0 12px; padding: 0; list-style: none; font: 14px/1.5 var(--sans); }
+.recovery-flow li { display: flex; align-items: center; }
+.recovery-flow li:not(:last-child)::after { content: '→'; margin: 0 14px; color: var(--muted); }
 .study { margin: 24px 0 28px; }
 .figure-link { display: block; }
 .figure-link img { width: 100%; height: auto; display: block; }
@@ -187,6 +197,10 @@ footer { margin-top: 30px; padding-top: 14px; padding-bottom: 22px; border-top: 
   .combined small { display: block; margin-left: 0; margin-top: 2px; }
   .method-formula { font-size: 11px; }
   .method-table { min-width: 640px; }
+  .test-diagrams { grid-template-columns: 1fr; gap: 22px; }
+  .recovery-flow { display: block; }
+  .recovery-flow li { margin-bottom: 10px; }
+  .recovery-flow li:not(:last-child)::after { content: '↓'; }
   .equation { font-size: 14px; }
 }
 

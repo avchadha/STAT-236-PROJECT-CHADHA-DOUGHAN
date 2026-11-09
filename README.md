@@ -34,7 +34,7 @@ The checks compare the scan with full enumeration on small matrices and exercise
 
 - `index.html` contains the text, LaTeX equations, and page structure
 - `assets/` contains the stylesheet, matrix explorer, and statistical functions
-- `figures/` contains the detection and recovery figures
+- `figures/` contains the detection and recovery figures; `method-*.svg` illustrates how the four detectors compute their statistics on a small example, separate from the simulation results
 - `tests/` contains the numerical and controller checks
 
 ## Paper figures

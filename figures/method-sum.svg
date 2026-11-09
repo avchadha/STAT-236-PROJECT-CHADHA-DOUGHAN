@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="160" viewBox="0 0 320 160" role="img" aria-labelledby="title desc">
+<title>Sum: use every entry</title><desc>All 25 entries sum to 10. Divide by n, which is 5, to obtain 2.</desc>
+<defs><marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="#555"/></marker></defs>
+<g font-family="Arial, Helvetica, sans-serif" fill="#171717">
+<rect x="12" y="15" width="22" height="22" fill="#eef3f7" stroke="#abb6bf"/>
+<text x="23" y="30" text-anchor="middle" font-size="13">0</text>
+<rect x="34" y="15" width="22" height="22" fill="#eef3f7" stroke="#abb6bf"/>
+<text x="45" y="30" text-anchor="middle" font-size="13">1</text>
+<rect x="56" y="15" width="22" height="22" fill="#eef3f7" stroke="#abb6bf"/>
+<text x="67" y="30" text-anchor="middle" font-size="13">−1</text>
+<rect x="78" y="15" width="22" height="22" fill="#eef3f7" stroke="#abb6bf"/>
+<text x="89" y="30" text-anchor="middle" font-size="13">0</text>
+<rect x="100" y="15" width="22" height="22" fill="#eef3f7" stroke="#abb6bf"/>
+<text x="111" y="30" text-anchor="middle" font-size="13">1</text>
+<rect x="12" y="37" width="22" height="22" fill="#eef3f7" stroke="#abb6bf"/>
+<text x="23" y="52" text-anchor="middle" font-size="13">−1</text>
+<rect x="34" y="37" width="22" height="22" fill="#eef3f7" stroke="#abb6bf"/>
+<text x="45" y="52" text-anchor="middle" font-size="13">3</text>
+<rect x="56" y="37" width="22" height="22" fill="#eef3f7" stroke="#abb6bf"/>
+<text x="67" y="52" text-anchor="middle" font-size="13">0</text>
+<rect x="78" y="37" width="22" height="22" fill="#eef3f7" stroke="#abb6bf"/>
+<text x="89" y="52" text-anchor="middle" font-size="13">2</text>
+<rect x="100" y="37" width="22" height="22" fill="#eef3f7" stroke="#abb6bf"/>
+<text x="111" y="52" text-anchor="middle" font-size="13">−1</text>
+<rect x="12" y="59" width="22" height="22" fill="#eef3f7" stroke="#abb6bf"/>
+<text x="23" y="74" text-anchor="middle" font-size="13">1</text>
+<rect x="34" y="59" width="22" height="22" fill="#eef3f7" stroke="#abb6bf"/>
+<text x="45" y="74" text-anchor="middle" font-size="13">0</text>
+<rect x="56" y="59" width="22" height="22" fill="#eef3f7" stroke="#abb6bf"/>
+<text x="67" y="74" text-anchor="middle" font-size="13">−1</text>
+<rect x="78" y="59" width="22" height="22" fill="#eef3f7" stroke="#abb6bf"/>
+<text x="89" y="74" text-anchor="middle" font-size="13">1</text>
+<rect x="100" y="59" width="22" height="22" fill="#eef3f7" stroke="#abb6bf"/>
+<text x="111" y="74" text-anchor="middle" font-size="13">0</text>
+<rect x="12" y="81" width="22" height="22" fill="#eef3f7" stroke="#abb6bf"/>
+<text x="23" y="96" text-anchor="middle" font-size="13">0</text>
+<rect x="34" y="81" width="22" height="22" fill="#eef3f7" stroke="#abb6bf"/>
+<text x="45" y="96" text-anchor="middle" font-size="13">2</text>
+<rect x="56" y="81" width="22" height="22" fill="#eef3f7" stroke="#abb6bf"/>
+<text x="67" y="96" text-anchor="middle" font-size="13">1</text>
+<rect x="78" y="81" width="22" height="22" fill="#eef3f7" stroke="#abb6bf"/>
+<text x="89" y="96" text-anchor="middle" font-size="13">3</text>
+<rect x="100" y="81" width="22" height="22" fill="#eef3f7" stroke="#abb6bf"/>
+<text x="111" y="96" text-anchor="middle" font-size="13">0</text>
+<rect x="12" y="103" width="22" height="22" fill="#eef3f7" stroke="#abb6bf"/>
+<text x="23" y="118" text-anchor="middle" font-size="13">−1</text>
+<rect x="34" y="103" width="22" height="22" fill="#eef3f7" stroke="#abb6bf"/>
+<text x="45" y="118" text-anchor="middle" font-size="13">0</text>
+<rect x="56" y="103" width="22" height="22" fill="#eef3f7" stroke="#abb6bf"/>
+<text x="67" y="118" text-anchor="middle" font-size="13">1</text>
+<rect x="78" y="103" width="22" height="22" fill="#eef3f7" stroke="#abb6bf"/>
+<text x="89" y="118" text-anchor="middle" font-size="13">−1</text>
+<rect x="100" y="103" width="22" height="22" fill="#eef3f7" stroke="#abb6bf"/>
+<text x="111" y="118" text-anchor="middle" font-size="13">0</text>
+<path d="M144 70H202" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="260" y="69" text-anchor="middle" font-size="28">2</text>
+<text x="260" y="94" text-anchor="middle" font-size="14" fill="#555">10 ÷ 5</text>
+<text x="67" y="147" text-anchor="middle" font-size="12" fill="#555">all 25 entries</text>
+</g></svg>

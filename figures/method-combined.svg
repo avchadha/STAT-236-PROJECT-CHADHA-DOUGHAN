@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="160" viewBox="0 0 320 160" role="img" aria-labelledby="title desc">
+<title>Sum or scan: combine two decisions</title><desc>Check sum and scan against their own level .025 cutoffs. Reject if either rejects; otherwise do not reject.</desc>
+<defs><marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="#555"/></marker></defs>
+<g font-family="Arial, Helvetica, sans-serif" fill="#171717">
+<rect x="8" y="12" width="160" height="48" fill="#eef3f7" stroke="#abb6bf"/>
+<text x="88" y="31" text-anchor="middle" font-size="14">Sum exceeds</text>
+<text x="88" y="49" text-anchor="middle" font-size="14">its .025 cutoff?</text>
+<rect x="8" y="100" width="160" height="48" fill="#eef3f7" stroke="#abb6bf"/>
+<text x="88" y="119" text-anchor="middle" font-size="14">Scan exceeds</text>
+<text x="88" y="137" text-anchor="middle" font-size="14">its .025 cutoff?</text>
+<path d="M168 36L209 80M168 124L209 80" fill="none" stroke="#555" stroke-width="1.5"/>
+<circle cx="230" cy="80" r="21" fill="#fff" stroke="#555"/>
+<text x="230" y="85" text-anchor="middle" font-size="15">OR</text>
+<path d="M252 80H303" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="280" y="65" text-anchor="middle" font-size="12" fill="#555">if either</text>
+<text x="285" y="110" text-anchor="middle" font-size="15">Reject</text>
+</g></svg>
