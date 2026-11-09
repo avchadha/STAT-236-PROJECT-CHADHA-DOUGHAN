@@ -39,16 +39,33 @@
   function cutoffs(n,k,alpha=.05) {
     return {sum:quantile(1-alpha), max:quantile(Math.exp(Math.log1p(-alpha)/(n*n))), scan:Math.sqrt(2*(2*logChoose(n,k)-Math.log(alpha)))};
   }
-  function canScan(n,k) { const logCount=logChoose(n,k); return logCount<=Math.log(20000)+1e-10 && logCount+Math.log(n*k)<=Math.log(8000000)+1e-10; }
+  function canScan(n,k) { const logCount=logChoose(n,k); return logCount<=Math.log(1000000)+1e-10 && logCount+Math.log(n*(1+Math.log2(Math.max(2,k))))<=Math.log(200000000)+1e-10; }
   function scan(values,n,k) {
     if(!canScan(n,k)) return null;
-    const sums=new Float64Array(n), chosen=[], order=Array.from({length:n},(_,i)=>i);
+    const sums=new Float64Array(n), chosen=[], heap=new Int32Array(k);
     let best=-Infinity, rows=null, cols=null, examined=0;
     function visit(start,depth) {
       if(depth===k) {
-        const sorted=order.slice().sort((a,b)=>sums[b]-sums[a]);
-        let total=0; for(let j=0;j<k;j++) total+=sums[sorted[j]];
-        if(total>best){best=total;rows=chosen.slice();cols=sorted.slice(0,k).sort((a,b)=>a-b);}
+        // Maintain the k largest column sums in a reusable min-heap.
+        let size=0;
+        for(let j=0;j<n;j++) {
+          if(size<k) {
+            let pos=size++;
+            while(pos>0) { const parent=(pos-1)>>1; if(sums[heap[parent]]<=sums[j])break; heap[pos]=heap[parent]; pos=parent; }
+            heap[pos]=j;
+          } else if(sums[j]>sums[heap[0]]) {
+            let pos=0;
+            while(2*pos+1<k) {
+              let child=2*pos+1;
+              if(child+1<k && sums[heap[child+1]]<sums[heap[child]])child++;
+              if(sums[j]<=sums[heap[child]])break;
+              heap[pos]=heap[child]; pos=child;
+            }
+            heap[pos]=j;
+          }
+        }
+        let total=0;for(let j=0;j<k;j++)total+=sums[heap[j]];
+        if(total>best){best=total;rows=chosen.slice();cols=Array.from(heap).sort((a,b)=>a-b);}
         examined++; return;
       }
       for(let i=start;i<=n-(k-depth);i++) {

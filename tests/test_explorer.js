@@ -62,3 +62,17 @@ async function controllerChecks(){
  console.log('Passed controller checks for samples, reset, reveal, grouping, parameter changes, worker results, and skipped scans.');
 }
 controllerChecks().catch(error=>{console.error(error);process.exitCode=1;});
+
+// Check the larger work budget and heap selection against a sorting reference.
+for(const [n,k] of [[32,6],[64,4],[128,3],[512,2]])assert.ok(S.canScan(n,k));
+assert.ok(!S.canScan(32,8));
+{
+ const n=20,k=4,values=S.matrix(n,k,1,true,42).values;
+ let best=-Infinity;
+ for(const rows of subsets(n,k)){
+  const columns=Array.from({length:n},(_,j)=>rows.reduce((total,i)=>total+values[i*n+j],0)).sort((a,b)=>b-a);
+  best=Math.max(best,columns.slice(0,k).reduce((a,b)=>a+b,0)/k);
+ }
+ close(S.scan(values,n,k).value,best);
+}
+console.log('Passed expanded limits and heap selection against a sorting reference.');

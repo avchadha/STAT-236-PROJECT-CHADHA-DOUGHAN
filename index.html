@@ -56,7 +56,7 @@
       <form id="controls" class="controls-panel" aria-label="Matrix parameters">
         <h3 class="panel-heading">Parameters</h3>
         <div class="parameter parameter-first">
-          <div class="parameter-row"><label for="dimension">Matrix size \(n\)</label><select id="dimension"><option value="16">16 × 16</option><option value="32">32 × 32</option><option value="64">64 × 64</option><option value="128">128 × 128</option><option value="512">512 × 512</option></select></div>
+          <div class="parameter-row"><label for="dimension">Matrix size \(n\)</label><select id="dimension"><option value="16">16 × 16</option><option value="20">20 × 20</option><option value="24">24 × 24</option><option value="32">32 × 32</option><option value="64">64 × 64</option><option value="128">128 × 128</option><option value="512">512 × 512</option></select></div>
         </div>
         <div class="parameter">
           <div class="parameter-row"><label for="block-size">Block size \(k\)</label><input id="block-number" type="number" min="1" max="8" value="3" aria-label="Block size number"></div>
@@ -114,6 +114,22 @@
     <h3 class="subheading">Exact recovery</h3>
     <p>Recovery requires the correct row and column sets. Even one incorrect index counts as an error. Butucea, Ingster and Suslina recover the block by retaining the indices that maximize its sum. The true block must have a larger sum than every incorrect candidate, including those differing by just one row or column.</p>
     <p>Spectral recovery uses singular vectors instead of enumerating blocks. The mean matrix \(\mu\mathbf{1}_S\mathbf{1}_T^{\mathsf T}\) has rank one, so Cai, Liang and Rakhlin use leading singular vectors to form row and column scores. Soft-thresholding entries first can help for smaller blocks. Our experiments give these methods \(k\) and select the \(k\) largest scores.</p>
+    <h3 class="subheading" id="boundaries">Statistical and computational boundaries</h3>
+    <p>These diagrams compare the signal needed for detection and recovery. Write \(k\asymp n^\gamma\) and \(\mu\asymp n^{-\beta}\). Moving right increases the block size, while moving up weakens the signal. The diagrams compare exponents and omit logarithmic factors.</p>
+    <div class="boundary-figures">
+      <figure>
+        <h4>Detection</h4>
+        <a href="figures/ma_wu_detection_boundary.png" target="_blank" rel="noopener"><img src="figures/ma_wu_detection_boundary.png" width="728" height="736" loading="lazy" alt="Ma and Wu's original detection diagram. The statistical and computational boundaries meet at block-size exponent two thirds."></a>
+        <figcaption>Figure 1 of <a href="https://doi.org/10.1214/14-AOS1300">Ma and Wu (2015)</a>. Their \(\alpha\), \(p\), and \(\lambda\) correspond to our \(\gamma\), \(n\), and \(\mu\).</figcaption>
+      </figure>
+      <figure>
+        <h4>Exact recovery</h4>
+        <a href="figures/clr_recovery_boundary.svg" target="_blank" rel="noopener"><img src="figures/clr_recovery_boundary.svg" width="500" height="500" loading="lazy" alt="Recovery exponent diagram. The statistical boundary is beta equals gamma over two and the computational boundary is the maximum of zero and gamma minus one half."></a>
+        <figcaption>Redrawn from Figure 1 of <a href="https://doi.org/10.1214/16-AOS1488">Cai, Liang and Rakhlin (2017)</a>, using our notation. Their computational lower bound concerns the broader sub-Gaussian noise model.</figcaption>
+      </figure>
+    </div>
+    <p>For detection, the statistical boundary is \(\beta^*=\max\{\gamma/2,2\gamma-1\}\) and the computational boundary is \(\beta^\sharp=\max\{0,2\gamma-1\}\). Below the latter, efficient tests succeed. Between the lines, reliable detection is statistically possible, but Ma and Wu's model has a computational barrier under the planted-clique hypothesis. The gap closes when \(\gamma>2/3\), where the sum attains the detection rate.</p>
+    <p>Recovery has a different comparison. Its statistical exponent boundary is \(\gamma/2\), while the computational boundary is \(\max\{0,\gamma-1/2\}\). For every fixed \(0&lt;\gamma&lt;1\), these leave a gap. Thus the efficient sum can detect a large block even when locating every affected row and column remains harder. The hardness statements in both papers are conditional and concern their alternative and noise classes, which are broader than the exact-size, common-mean Gaussian model used in our demo.</p>
   </section>
 
   <section id="results" class="section" aria-labelledby="results-title">
@@ -122,14 +138,14 @@
     <article class="study">
       <h3>Detection</h3>
       <a href="figures/detection_power.png" target="_blank" rel="noopener" class="figure-link" aria-label="Open the detection figure at full size"><img src="figures/detection_power.png" width="1189" height="590" loading="lazy" alt="Six detection-power panels comparing sum, scan, max and sum-or-scan at n=16 and sum versus max at n=512."></a>
-      <p class="figure-caption">Figure 1. Detection power as \(\mu\) increases. The top row uses \(n=16\) and \(k=3,5,8\). The bottom row uses \(n=512\) and \(k=12,42,107\). The horizontal ranges differ between panels.</p>
+      <p class="figure-caption">Figure 3. Detection power as \(\mu\) increases. The top row uses \(n=16\) and \(k=3,5,8\). The bottom row uses \(n=512\) and \(k=12,42,107\). The horizontal ranges differ between panels.</p>
       <p>The dashed curve gives the sum's exact Gaussian power, \(1-\Phi(z_{.95}-\mu k^2/n)\), where \(z_{.95}=\Phi^{-1}(.95)\). Each test uses level \(.05\), with \(.025\) per component for the combined test. The scan cutoff uses \(1{,}500\) separate noise matrices.</p>
       <p>At \(n=16\), \(k=3\), and \(\mu\approx1.73\), the scan has power \(.72\) versus \(.21\) for the sum. At \(n=512\), \(k=107\), and \(\mu\approx.13\), the sum reaches \(.90\) while the max stays near \(.05\). Scanning helps for the smaller block by excluding many unaffected entries. For the larger block, adding many weak shifts gives the sum power even when no individual entry stands out.</p>
     </article>
     <article class="study">
       <h3>Recovery</h3>
       <a href="figures/recovery_error.png" target="_blank" rel="noopener" class="figure-link" aria-label="Open the recovery figure at full size"><img src="figures/recovery_error.png" width="1189" height="590" loading="lazy" alt="Six exact-recovery-error panels showing exhaustive and spectral methods at n=16 and spectral methods at n=512, with soft thresholding for small blocks."></a>
-      <p class="figure-caption">Figure 2. Probability of at least one incorrect row or column. Lower error is better. All recovery methods are given \(k\).</p>
+      <p class="figure-caption">Figure 4. Probability of at least one incorrect row or column. Lower error is better. All recovery methods are given \(k\).</p>
       <p>The dashed lines mark the asymptotic recovery reference from Butucea, Ingster and Suslina, specialized to square blocks</p>
       <div class="equation">
         \[

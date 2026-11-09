@@ -189,3 +189,10 @@ footer { margin-top: 30px; padding-top: 14px; padding-bottom: 22px; border-top: 
   .method-table { min-width: 640px; }
   .equation { font-size: 14px; }
 }
+
+.boundary-figures { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin: 22px 0; }
+.boundary-figures figure { margin: 0; min-width: 0; }
+.boundary-figures h4 { margin: 0 0 12px; font-size: 18px; font-weight: normal; text-align: center; }
+.boundary-figures img { display: block; width: 100%; height: auto; }
+.boundary-figures figcaption { font-size: 14px; line-height: 1.5; margin-top: 12px; }
+@media (max-width: 650px) { .boundary-figures { grid-template-columns: 1fr; gap: 28px; } }
