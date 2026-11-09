@@ -12,7 +12,7 @@
     $('planted').checked=state.planted; $('reveal').checked=state.reveal; $('group').checked=state.group;
     $('reveal').disabled=!state.planted; $('group').disabled=!state.planted;
     $('matrix-summary').textContent=state.n+' × '+state.n+' · '+(state.planted?state.k+' × '+state.k+' block':'noise only');
-    $('seed-label').textContent='Draw '+state.seed;
+    $('seed-label').textContent='Seed '+state.seed;
     const lower=Math.sqrt(state.n), upper=state.n**(2/3);
     $('regime').textContent=state.k<lower?'k < √n · small block':state.k<upper?'√n ≤ k < n²ᐟ³ · intermediate block':'k ≥ n²ᐟ³ · larger block';
     document.querySelectorAll('[data-gamma]').forEach(button=>button.setAttribute('aria-pressed',state.k===Math.floor(state.n**Number(button.dataset.gamma))?'true':'false'));
@@ -36,18 +36,18 @@
     context.drawImage(raster,offset,offset,size,size);
     if(n<=32){context.strokeStyle='rgba(255,255,255,.2)';context.lineWidth=.5;for(let i=1;i<n;i++){const p=offset+i*size/n;context.beginPath();context.moveTo(p,offset);context.lineTo(p,640);context.moveTo(offset,p);context.lineTo(640,p);context.stroke();}}
     if(offset){context.fillStyle='#222222';displayRows.forEach((r,i)=>{if(rowSet.has(r))context.fillRect(0,offset+i*size/n,8,size/n);});displayCols.forEach((c,j)=>{if(colSet.has(c))context.fillRect(offset+j*size/n,0,size/n,8);});}
-    $('matrix-caption').textContent=state.group&&state.planted?'Rows and columns are reordered using the planted membership for this display only. The statistics use the original matrix.':'The same fixed color scale is used for every sample. Hover over a cell to read its value.';
+    $('matrix-caption').textContent=state.group&&state.planted?'Planted rows and columns are grouped for display. The statistics are unchanged.':'Blue entries are negative and red entries are positive. Hover over an entry to read its value.';
   }
   function statistic(name,value,cutoff){
     $(name+'-value').textContent=number(value);$(name+'-value').classList.remove('unavailable');
-    $(name+'-detail').textContent='Cutoff '+number(cutoff)+(name==='scan'?' · conservative bound':'');
-    const decision=$(name+'-decision');decision.textContent=value>cutoff?'Above cutoff':'Below cutoff';decision.className=value>cutoff?'above':'';
+    $(name+'-detail').textContent=number(cutoff)+(name==='scan'?' (bound)':'');
+    const decision=$(name+'-decision');decision.textContent=value>cutoff?'Reject':'Do not reject';decision.className=value>cutoff?'above':'';
   }
   function updateCombined(){
     const cut=S.cutoffs(state.n,state.k,.025), out=$('combined-decision');out.className='';
-    if(currentStats.sum>cut.sum||(exact&&exact.value>cut.scan)){out.textContent='Above a component cutoff';out.className='above';}
-    else if(exact){out.textContent='Below both cutoffs';}
-    else out.textContent=scanPending?'Waiting for scan':'Needs the scan';
+    if(currentStats.sum>cut.sum||(exact&&exact.value>cut.scan)){out.textContent='Reject';out.className='above';}
+    else if(exact){out.textContent='Do not reject';}
+    else out.textContent=scanPending?'Computing…':'Not evaluated';
   }
   function sample(){
     generation++;if(worker){worker.terminate();worker=null;}
@@ -57,20 +57,34 @@
     statistic('sum',currentStats.sum,cut.sum);statistic('max',currentStats.max,cut.max);
     const possible=S.canScan(state.n,state.k);
     $('scan-value').className='unavailable';$('scan-decision').className='';
+    $('scan-detail').textContent=number(cut.scan)+' (bound)';
     if(!possible){
-      $('scan-value').textContent='Not computed';$('scan-decision').textContent='Search too large';
-      const logCount=S.logChoose(state.n,state.k),count=logCount<Math.log(1e9)?Math.round(Math.exp(logCount)).toLocaleString():'about 10^'+(logCount/Math.LN10).toFixed(1);
-      $('scan-detail').textContent=count+' row sets to examine.';
+      $('scan-value').textContent='Not computed';$('scan-decision').textContent='—';
+      $('scan-status').textContent='Exact scan skipped. Try a smaller matrix or block.';
       document.querySelector('.statistics').setAttribute('aria-busy','false');updateCombined();return;
     }
-    scanPending=true;$('scan-value').textContent='Computing…';$('scan-decision').textContent='Exact row search';$('scan-detail').textContent='The planted location is hidden from this search.';
+    scanPending=true;$('scan-value').textContent='Computing…';$('scan-decision').textContent='—';$('scan-status').textContent='Computing the exact scan…';
     document.querySelector('.statistics').setAttribute('aria-busy','true');updateCombined();
     const id=generation;
-    function done(result,error){if(id!==generation)return;scanPending=false;document.querySelector('.statistics').setAttribute('aria-busy','false');if(error||!result){$('scan-value').textContent='Unavailable';$('scan-decision').textContent='Search did not finish';$('scan-detail').textContent=error||'Try a smaller configuration.';}else{exact=result;statistic('scan',result.value,cut.scan);$('scan-detail').textContent+=' · '+result.examined.toLocaleString()+' row sets';}updateCombined();}
+    function done(result,error){
+      if(id!==generation)return;
+      scanPending=false;
+      document.querySelector('.statistics').setAttribute('aria-busy','false');
+      if(error||!result){
+        $('scan-value').textContent='Unavailable';
+        $('scan-decision').textContent='—';
+        $('scan-status').textContent=error||'The scan could not finish. Try a smaller matrix.';
+      }else{
+        exact=result;
+        statistic('scan',result.value,cut.scan);
+        $('scan-status').textContent='Exact scan over '+result.examined.toLocaleString()+' row sets.';
+      }
+      updateCombined();
+    }
     try{
       worker=new Worker('assets/scan-worker.js');
       worker.onmessage=event=>{if(event.data.id===id&&id===generation){done(event.data.result,event.data.error);worker?.terminate();worker=null;}};
-      worker.onerror=()=>{if(id!==generation)return;worker?.terminate();worker=null;done(null,'The scan worker could not load. Serve the site over HTTP.');};
+      worker.onerror=()=>{if(id!==generation)return;worker?.terminate();worker=null;done(null,'The exact scan could not run in this browser.');};
       worker.postMessage({id,values:draw.values.slice().buffer,n:state.n,k:state.k});
     }catch(error){done(null,error.message);}
   }

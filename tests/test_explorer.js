@@ -55,8 +55,8 @@ async function controllerChecks(){
  elements.reset.fire('click');await settle();assert.equal(elements['sum-value'].textContent,initial);
  elements.dimension.value='512';elements.dimension.fire('change');elements['block-number'].value='12';elements['block-number'].fire('input');elements['strength-number'].value='0';elements['strength-number'].fire('input');await settle();
  assert.equal(elements['scan-value'].textContent,'Not computed');
- assert.equal(elements['combined-decision'].textContent,'Needs the scan');
- elements['strength-number'].value='15';elements['strength-number'].fire('input');await settle();assert.equal(elements['sum-decision'].textContent,'Above cutoff');
+ assert.equal(elements['combined-decision'].textContent,'Not evaluated');
+ elements['strength-number'].value='15';elements['strength-number'].fire('input');await settle();assert.equal(elements['sum-decision'].textContent,'Reject');
  elements.planted.checked=false;elements.planted.fire('change');await settle();assert.equal(elements.reveal.disabled,true);assert.equal(elements.group.disabled,true);
  elements.reset.fire('click');await settle();assert.equal(elements['sum-value'].textContent,initial);
  console.log('Passed controller checks for samples, reset, reveal, grouping, parameter changes, worker results, and skipped scans.');
